@@ -2074,10 +2074,10 @@
       </div>
       <div id="syncDisconnectedView">
         <p style="font-size:12.5px; margin-top:0; color:var(--ink-soft);">
-          1. <a href="https://github.com/settings/tokens/new?scopes=gist&description=Liuyao%20Field%20Notes" target="_blank" rel="noreferrer">前往 GitHub 生成仅含 <code>gist</code> 权限的 Token &rarr;</a>
+          1. <a href="https://github.com/settings/personal-access-tokens/new?name=Liuyao+Field+Notes&amp;description=Liuyao+Gist+Sync&amp;expires_in=none&amp;gists=write" target="_blank" rel="noreferrer">前往 GitHub 生成仅含 <code>gists</code> 读写权限（默认永不过期）的 Token &rarr;</a>
         </p>
         <div style="margin-bottom:12px;">
-          <input id="tokenInput" class="field-input" style="width:100%;" type="password" placeholder="粘贴 ghp_ 开头的令牌" autocomplete="off" />
+          <input id="tokenInput" class="field-input" style="width:100%;" type="password" placeholder="粘贴 github_pat_ 或 ghp_ 开头的令牌" autocomplete="off" />
         </div>
         <button class="btn btn-primary" id="connectGithubBtn" style="width:100%;">连接并双向同步</button>
       </div>
