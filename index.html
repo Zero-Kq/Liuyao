@@ -2010,12 +2010,12 @@
             <input id="archiveSearch" class="field-input" style="flex:1; min-width:200px;" type="search" placeholder="搜索卦名、所问记录或复盘笔记…" />
             <select id="archiveFilterCat" class="field-select">
               <option value="ALL">全部类别</option>
-              <option value="career">事业 / 求职</option>
-              <option value="wealth">财运 / 求财</option>
-              <option value="love">感情 / 姻缘</option>
-              <option value="study">学业 / 考试</option>
-              <option value="health">健康 / 医药</option>
-              <option value="travel">出行 / 合作</option>
+              <option value="career">事业</option>
+              <option value="wealth">财运</option>
+              <option value="love">感情</option>
+              <option value="study">学业</option>
+              <option value="health">健康</option>
+              <option value="travel">出行</option>
               <option value="unset">未选类别</option>
             </select>
           </div>
@@ -2241,12 +2241,12 @@
     };
 
     const CATEGORIES = [
-      { id: "career", shortName: "事业", name: "事业 / 求职", targetRel: "官鬼", yuanRel: "妻财", jiRel: "子孙", desc: "以官鬼为用神，参看父母（文书/单位）与世爻。" },
-      { id: "wealth", shortName: "财运", name: "财运 / 求财", targetRel: "妻财", yuanRel: "子孙", jiRel: "兄弟", desc: "以妻财为用神，子孙为财源，忌兄弟劫财。" },
-      { id: "love",   shortName: "感情", name: "感情 / 姻缘", targetRel: "世应", yuanRel: "", jiRel: "", desc: "重世应相生相合，可按需侧重妻财或官鬼。" },
-      { id: "study",  shortName: "学业", name: "学业 / 考试", targetRel: "父母", yuanRel: "官鬼", jiRel: "妻财", desc: "以父母为成绩文书，官鬼为名次录取，忌妻财分心。" },
-      { id: "health", shortName: "健康", name: "健康 / 医药", targetRel: "世爻", yuanRel: "子孙", jiRel: "官鬼", desc: "重世爻元气，子孙为医药康泰，官鬼为病灶隐忧。" },
-      { id: "travel", shortName: "出行", name: "出行 / 合作", targetRel: "世应", yuanRel: "父母", jiRel: "官鬼", desc: "看世应是否相合相生，并参看父母（行程/契约）与官鬼（阻碍）。" }
+      { id: "career", shortName: "事业", name: "事业", targetRel: "官鬼", yuanRel: "妻财", jiRel: "子孙", desc: "以官鬼为用神，参看父母（文书/单位）与世爻。" },
+      { id: "wealth", shortName: "财运", name: "财运", targetRel: "妻财", yuanRel: "子孙", jiRel: "兄弟", desc: "以妻财为用神，子孙为财源，忌兄弟劫财。" },
+      { id: "love",   shortName: "感情", name: "感情", targetRel: "世应", yuanRel: "", jiRel: "", desc: "重世应相生相合，可按需侧重妻财或官鬼。" },
+      { id: "study",  shortName: "学业", name: "学业", targetRel: "父母", yuanRel: "官鬼", jiRel: "妻财", desc: "以父母为成绩文书，官鬼为名次录取，忌妻财分心。" },
+      { id: "health", shortName: "健康", name: "健康", targetRel: "世爻", yuanRel: "子孙", jiRel: "官鬼", desc: "重世爻元气，子孙为医药康泰，官鬼为病灶隐忧。" },
+      { id: "travel", shortName: "出行", name: "出行", targetRel: "世应", yuanRel: "父母", jiRel: "官鬼", desc: "看世应是否相合相生，并参看父母（行程/契约）与官鬼（阻碍）。" }
     ];
 
     const SPIRIT_TRAITS = {
