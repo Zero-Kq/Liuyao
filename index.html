@@ -1833,7 +1833,7 @@
       <div>
         <div class="eyebrow">THE SIX LINES · 京房纳甲</div>
         <h2 class="hero-title">心中所念，<em>起卦观象。</em></h2>
-        <p class="hero-desc">先摇六爻成象，再于右侧择所求类别，依用神、世应、五行生克与日辰展卷分析。</p>
+        <p class="hero-desc">先默念所想，摇六爻成象，再于右侧择所求类别，依用神、世应、五行生克与日辰展卷分析。</p>
       </div>
       <div class="edition-note">
         <div class="edition-kicker">FIELD NOTES / 干支历</div>
@@ -1892,7 +1892,7 @@
           <div class="stage-action-area" id="stageActionArea">
             <div id="castingControls">
               <h3 class="stage-prompt-title" id="promptTitle">六爻未起，静心定念</h3>
-              <p class="stage-prompt-sub" id="promptSub">可一键依次连摇六爻，亦可逐次单独摇爻六次，自下而上显象。</p>
+              <p class="stage-prompt-sub" id="promptSub">心中默念所求，点击按钮摇动六爻。</p>
               <div class="action-btn-row">
                 <button class="btn btn-primary" id="tossAllBtn">
                   <span>一键摇动六爻</span>
@@ -1903,7 +1903,7 @@
                 </button>
                 <button class="btn btn-reset hidden" id="resetCastingBtn">重摇</button>
               </div>
-              <div class="action-footnote">三枚铜钱法 · 老阳(9)老阴(6)为动爻 · 本地即时装卦</div>
+              <div class="action-footnote">可一键依次连摇六爻，亦可逐次单独摇爻六次，自下而上显象。</div>
             </div>
 
             <div id="completedControls" class="hidden">
@@ -1993,7 +1993,7 @@
               <div class="shortcut-label">你的私人卦馆</div>
               <div class="shortcut-stat">
                 <strong id="shortcutCount">0</strong>
-                <span>条档案，随时回看</span>
+                <span>条档案</span>
               </div>
             </div>
           </div>
@@ -3059,7 +3059,7 @@
         tossAllBtn.querySelector("span").textContent = "一键摇动六爻";
         resetBtn.classList.add("hidden");
         promptTitle.textContent = "六爻未起，静心定念";
-        promptSub.textContent = "可一键依次连摇六爻，亦可逐次单独摇爻六次，自下而上显象。";
+        promptSub.textContent = "心中默念所求，点击按钮摇动六爻。";
         bottomLeft.textContent = "尚未开启的卦象";
       } else if (count < 6) {
         metaTL.innerHTML = `CASTING<br/>${count} OF 6`;
