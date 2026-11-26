@@ -236,6 +236,7 @@
       display: inline-grid;
       place-items: center;
       cursor: pointer;
+      text-decoration: none;
       transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
     }
 
@@ -1639,6 +1640,7 @@
       font-size: 11.5px;
       cursor: pointer;
       padding: 0;
+      text-decoration: none;
     }
 
     .footer-link-btn:hover { color: var(--rust); }
@@ -1823,6 +1825,9 @@
         <button class="icon-btn" id="openGuideBtn" title="排盘与解卦说明" aria-label="排盘说明">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg>
         </button>
+        <a class="icon-btn" href="https://zero-kq.github.io/" target="_blank" rel="noopener noreferrer" title="返回个人主页" aria-label="个人主页">
+          <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5M5 9.5V20h14V9.5M9.5 20v-6h5v6"/></svg>
+        </a>
       </div>
     </div>
   </header>
@@ -2040,6 +2045,7 @@
       <span>本地自动保存</span>
       <button class="footer-link-btn" id="footerGuideBtn">排盘规则</button>
       <button class="footer-link-btn" id="footerSyncBtn">云端备份 &rarr;</button>
+      <a class="footer-link-btn" href="https://zero-kq.github.io/" target="_blank" rel="noopener noreferrer">个人主页 &#8599;</a>
     </div>
   </footer>
 
