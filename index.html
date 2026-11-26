@@ -1,0 +1,4112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f6f3eb" />
+  <title>观象 · 六爻起卦与断象手记</title>
+  <style>
+    :root {
+      --paper: #f6f3eb;
+      --surface: #faf8f1;
+      --surface-soft: #f3f3e8;
+      --surface-hover: #ececde;
+      --ink: #343b30;
+      --ink-soft: #50584a;
+      --muted: #7a7e6e;
+      --line: #dfdfd1;
+      --line-strong: #cdd0bf;
+      --rust: #a65637;
+      --rust-hover: #8e492e;
+      --rust-surface: #fcf0e9;
+      --rust-border: #daa792;
+      --green: #55694c;
+      --green-dot: #82916a;
+      --green-surface: #f0f4eb;
+      --green-border: #bdccb2;
+      --ochre: #9c723b;
+      --ochre-surface: #fcf4e5;
+      --ochre-border: #dec189;
+      --teal: #4b7973;
+      --teal-surface: #eaf6f2;
+      --teal-border: #9fc8b9;
+      --violet: #736087;
+      --violet-surface: #f4eef9;
+      --violet-border: #bea7d2;
+      --dark-btn: #3f4b38;
+      --dark-btn-hover: #2d3927;
+      --serif: "Iowan Old Style", "Palatino Linotype", "Songti SC", "Noto Serif SC", "Noto Serif CJK SC", Georgia, serif;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.65;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Subtle dot-matrix paper grain matching Fossildle */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: radial-gradient(rgba(82, 87, 68, 0.14) 0.75px, transparent 0.75px);
+      background-size: 5px 5px;
+      opacity: 0.42;
+    }
+
+    a { color: var(--rust); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    button, input, select, textarea {
+      font: inherit;
+      color: inherit;
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--rust);
+      outline-offset: 3px;
+    }
+
+    .hidden { display: none !important; }
+
+    /* Sticky Topbar */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(246, 243, 235, 0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header-inner {
+      max-width: 1264px;
+      margin: 0 auto;
+      padding: 0 40px;
+      height: 86px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+    }
+
+    .brand-name {
+      font-family: var(--serif);
+      font-size: 25px;
+      line-height: 1;
+      letter-spacing: -0.5px;
+      font-weight: 500;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .brand-sub {
+      font-size: 9px;
+      line-height: 1.5;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin: 4px 0 0;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 34px;
+      height: 100%;
+    }
+
+    .nav-link {
+      position: relative;
+      height: 100%;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: none;
+      background: transparent;
+      padding: 0 2px;
+      font-size: 13px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 0.18s ease;
+    }
+
+    .nav-link svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.7;
+    }
+
+    .nav-link:hover { color: var(--ink); }
+
+    .nav-link.active {
+      color: var(--rust);
+      font-weight: 600;
+    }
+
+    .nav-link.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 2px;
+      background: var(--rust);
+    }
+
+    .nav-count {
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 3px;
+      background: #ecece0;
+      color: var(--ink-soft);
+    }
+
+    .header-tools {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .live-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: var(--muted);
+      padding-right: 6px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green-dot);
+      flex-shrink: 0;
+    }
+    .status-dot.busy { background: var(--ochre); animation: pulse 1.1s infinite; }
+    .status-dot.err { background: var(--rust); }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .icon-btn {
+      position: relative;
+      width: 34px;
+      height: 34px;
+      border-radius: 5px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--ink-soft);
+      display: inline-grid;
+      place-items: center;
+      cursor: pointer;
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+
+    .icon-btn:hover {
+      background: #eae7dc;
+      border-color: var(--line);
+      color: var(--ink);
+    }
+
+    .icon-btn svg {
+      width: 17px;
+      height: 17px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.65;
+    }
+
+    .sync-badge-dot {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #c5c7b8;
+    }
+    .sync-badge-dot.ok { background: var(--green-dot); }
+    .sync-badge-dot.busy { background: var(--ochre); animation: pulse 1s infinite; }
+    .sync-badge-dot.err { background: var(--rust); }
+
+    /* Main Container */
+    .page-container {
+      position: relative;
+      z-index: 1;
+      max-width: 1264px;
+      margin: 0 auto;
+      padding: 0 40px 44px;
+    }
+
+    /* Page Intro */
+    .page-intro {
+      padding: 46px 0 32px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 2.2px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      display: inline-block;
+      width: 22px;
+      height: 1px;
+      background: var(--rust);
+    }
+
+    .hero-title {
+      font-family: var(--serif);
+      font-size: 38px;
+      line-height: 1.45;
+      font-weight: 500;
+      letter-spacing: 1px;
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .hero-title em {
+      font-style: normal;
+      color: var(--rust);
+    }
+
+    .hero-desc {
+      margin: 8px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .edition-note {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .edition-kicker {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .edition-date {
+      font-family: var(--mono);
+      font-size: 16px;
+      letter-spacing: 1.8px;
+      color: #626952;
+      margin: 5px 0 3px;
+    }
+
+    .edition-ganzhi {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Asymmetric 2-Column Layout */
+    .discovery-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 368px;
+      gap: 38px;
+      align-items: start;
+    }
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-width: 0;
+    }
+
+    /* Left Main Card */
+    .excavation-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      box-shadow: 0 3px 12px rgba(67, 71, 40, 0.03);
+      overflow: hidden;
+    }
+
+    .card-topline {
+      height: 54px;
+      margin: 0 24px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .card-topline-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--ink-soft);
+      font-weight: 500;
+    }
+
+    .card-topline-left svg {
+      width: 15px;
+      height: 15px;
+      stroke: var(--muted);
+      fill: none;
+      stroke-width: 1.7;
+    }
+
+    .card-topline-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Specimen / Hexagram Stage */
+    .specimen-stage {
+      position: relative;
+      min-height: 410px;
+      padding: 28px 28px 22px;
+      background-image: radial-gradient(rgba(122, 126, 110, 0.22) 0.75px, transparent 0.75px);
+      background-size: 17px 17px;
+      background-position: 8px 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .orbital-rings {
+      position: absolute;
+      left: 50%;
+      top: 46%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      transition: opacity 0.45s ease;
+    }
+
+    .orbital-rings.dimmed { opacity: 0.28; }
+
+    .ring-outer {
+      width: 332px;
+      height: 332px;
+      border-radius: 50%;
+      border: 1px solid rgba(185, 188, 168, 0.32);
+      display: grid;
+      place-items: center;
+    }
+
+    .ring-inner {
+      width: 284px;
+      height: 284px;
+      border-radius: 50%;
+      border: 1px dashed rgba(173, 177, 156, 0.42);
+    }
+
+    .stage-meta-tl {
+      position: absolute;
+      top: 22px;
+      left: 24px;
+      font-family: var(--mono);
+      font-size: 9px;
+      line-height: 1.65;
+      letter-spacing: 1.8px;
+      color: #9b9f8f;
+      text-transform: uppercase;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .stage-vertical-caption {
+      position: absolute;
+      left: 22px;
+      top: 56%;
+      transform: translateY(-50%) rotate(180deg);
+      writing-mode: vertical-rl;
+      white-space: nowrap;
+      font-family: var(--mono);
+      font-size: 8px;
+      letter-spacing: 2.6px;
+      color: #aeb2a2;
+      text-transform: uppercase;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .specimen-stage.is-complete .stage-meta-tl,
+    .specimen-stage.is-complete .stage-vertical-caption {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .specimen-stage.is-complete {
+      min-height: 360px;
+      padding: 24px 28px 20px;
+      justify-content: flex-start;
+    }
+
+    .sealed-stamp {
+      position: absolute;
+      right: 26px;
+      top: 22px;
+      transform: rotate(-11deg);
+      border: 1px solid #c9c3b1;
+      padding: 6px 12px;
+      text-align: center;
+      color: #a19781;
+      background: rgba(250, 248, 241, 0.8);
+      pointer-events: none;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .sealed-stamp.hidden-stamp {
+      opacity: 0;
+      transform: rotate(-11deg) scale(0.92);
+    }
+
+    .sealed-stamp .stamp-en {
+      display: block;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 2.2px;
+    }
+
+    .sealed-stamp .stamp-zh {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 2px;
+      margin-top: 2px;
+    }
+
+    /* Coin tray inside stage */
+    .coin-tray {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .coin {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1.5px solid #a7926b;
+      background: radial-gradient(circle at 32% 28%, #f2e7ca, #cdb789);
+      color: #544425;
+      display: grid;
+      place-items: center;
+      font-family: var(--serif);
+      font-size: 10px;
+      font-weight: 600;
+      position: relative;
+      box-shadow: inset 0 0 0 2.5px rgba(250, 248, 241, 0.52), 0 3px 8px rgba(74, 61, 35, 0.12);
+      transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1), background 0.24s ease;
+      user-select: none;
+    }
+
+    .coin::after {
+      content: "";
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      border: 1px solid rgba(84, 68, 37, 0.38);
+      background: rgba(246, 243, 235, 0.78);
+    }
+
+    .coin span {
+      position: relative;
+      z-index: 1;
+      transform: translateY(-13px);
+      font-size: 9.5px;
+      line-height: 1;
+      letter-spacing: 0.4px;
+    }
+
+    .coin.back {
+      background: radial-gradient(circle at 32% 28%, #cfc2a4, #96835d);
+      border-color: #7d6b4a;
+      color: #faf6eb;
+    }
+
+    .coin.tossing {
+      transform: rotateY(540deg) translateY(-6px) scale(1.08);
+    }
+
+    .coin.idle-float {
+      animation: floatCoin 6.5s ease-in-out infinite;
+    }
+    .coin.idle-float:nth-child(2) { animation-delay: -1.8s; }
+    .coin.idle-float:nth-child(3) { animation-delay: -3.6s; }
+
+    @keyframes floatCoin {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-4px); }
+    }
+
+    /* Progressive 6-Line Hexagram Stack (Casting View) */
+    .yao-stack-shell {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 470px;
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 9px;
+    }
+
+    .yao-slot {
+      display: grid;
+      grid-template-columns: 44px 1fr 122px;
+      align-items: center;
+      gap: 14px;
+      height: 36px;
+      padding: 0 12px;
+      border-radius: 3px;
+      border: 1px dashed #d6d8c8;
+      background: rgba(250, 248, 241, 0.58);
+      transition: border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .yao-slot.next-slot {
+      border-color: rgba(166, 86, 55, 0.55);
+      background: rgba(252, 240, 233, 0.45);
+    }
+
+    .yao-slot.filled {
+      border-style: solid;
+      border-color: var(--line);
+      background: rgba(250, 248, 241, 0.94);
+    }
+
+    .yao-slot.just-revealed {
+      animation: yaoReveal 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes yaoReveal {
+      0% { opacity: 0; transform: scaleY(0.25) translateY(6px); }
+      100% { opacity: 1; transform: scaleY(1) translateY(0); }
+    }
+
+    .yao-slot-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.6px;
+    }
+
+    .yao-slot.next-slot .yao-slot-label {
+      color: var(--rust);
+      font-weight: 600;
+    }
+
+    .yao-bar-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 14px;
+    }
+
+    .yao-placeholder-line {
+      width: 100%;
+      max-width: 196px;
+      height: 2px;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(180, 183, 165, 0.55) 0 6px,
+        transparent 6px 12px
+      );
+    }
+
+    .yao-bar {
+      display: inline-flex;
+      align-items: center;
+      width: 100%;
+      max-width: 196px;
+      height: 11px;
+      gap: 20px;
+    }
+
+    .yao-bar.compact {
+      max-width: 92px;
+      height: 9px;
+      gap: 11px;
+    }
+
+    .yao-seg {
+      flex: 1;
+      height: 100%;
+      border-radius: 2px;
+      background: var(--ink);
+    }
+
+    .yao-bar.moving .yao-seg {
+      background: var(--rust);
+    }
+
+    .yao-slot-tag {
+      text-align: right;
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .yao-slot-tag.moving {
+      color: var(--rust);
+      font-weight: 600;
+    }
+
+    .stage-caption-bottom {
+      position: relative;
+      z-index: 2;
+      margin-top: 14px;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 2.2px;
+      color: #a4a896;
+      text-transform: uppercase;
+    }
+
+    /* Completed Paipan View inside Stage */
+    .paipan-shell {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      animation: panelFade 0.35s ease;
+    }
+
+    @keyframes panelFade {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .paipan-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 14px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .paipan-name {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 500;
+      line-height: 1.25;
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .paipan-name .zhi {
+      font-size: 16px;
+      color: var(--muted);
+      margin: 0 6px;
+      font-weight: 400;
+    }
+
+    .paipan-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      border: 1px solid var(--line-strong);
+      background: var(--paper);
+      font-size: 11px;
+      color: var(--ink-soft);
+      line-height: 1.3;
+    }
+
+    .chip.ochre {
+      background: var(--ochre-surface);
+      border-color: var(--ochre-border);
+      color: #775526;
+    }
+
+    .chip.rust {
+      background: var(--rust-surface);
+      border-color: var(--rust-border);
+      color: var(--rust);
+    }
+
+    .chip.green {
+      background: var(--green-surface);
+      border-color: var(--green-border);
+      color: var(--green);
+    }
+
+    .chip.teal {
+      background: var(--teal-surface);
+      border-color: var(--teal-border);
+      color: var(--teal);
+    }
+
+    .paipan-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .paipan-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+
+    .paipan-table th {
+      text-align: left;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      padding: 6px 8px 9px;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    .paipan-table td {
+      padding: 9px 8px;
+      border-bottom: 1px dashed #e2e2d5;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .paipan-table tbody tr {
+      transition: background 0.2s ease;
+    }
+
+    .paipan-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .paipan-table tbody tr.is-target {
+      background: rgba(166, 86, 55, 0.08);
+    }
+
+    .paipan-table tbody tr.is-self-hl {
+      background: rgba(85, 105, 76, 0.07);
+    }
+
+    .paipan-table tbody tr.is-target.is-self-hl {
+      background: linear-gradient(90deg, rgba(166, 86, 55, 0.1), rgba(85, 105, 76, 0.09));
+    }
+
+    .shi-badge {
+      display: inline-block;
+      padding: 1px 5px;
+      border-radius: 2px;
+      font-size: 10px;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .shi-badge.shi {
+      background: var(--rust);
+      color: #fff9ec;
+    }
+
+    .shi-badge.ying {
+      background: var(--ochre-surface);
+      border: 1px solid var(--ochre-border);
+      color: #775526;
+    }
+
+    .target-pill {
+      display: inline-block;
+      margin-left: 5px;
+      padding: 0 5px;
+      border-radius: 2px;
+      font-size: 10px;
+      background: #efe1d2;
+      color: var(--rust);
+      font-weight: 600;
+    }
+
+    .void-mark {
+      display: inline-block;
+      margin-left: 4px;
+      padding: 0 4px;
+      border-radius: 2px;
+      font-size: 10px;
+      border: 1px dashed #c4c6b7;
+      color: var(--muted);
+    }
+
+    .fushen-hint {
+      display: block;
+      font-size: 10.5px;
+      color: var(--violet);
+      margin-top: 2px;
+    }
+
+    .moving-mark {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--rust);
+      margin-left: 6px;
+    }
+
+    /* Action Area inside Left Card */
+    .stage-action-area {
+      padding: 6px 28px 28px;
+      text-align: center;
+      background: var(--surface);
+    }
+
+    .stage-prompt-title {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 500;
+      margin: 2px 0 6px;
+      color: var(--ink);
+    }
+
+    .stage-prompt-sub {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 0 0 18px;
+    }
+
+    .action-btn-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 0 20px;
+      border-radius: 4px;
+      border: 1px solid var(--line-strong);
+      background: rgba(250, 248, 241, 0.72);
+      color: #5b6652;
+      font-size: 13.5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+
+    .btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      background: #eeeee2;
+      border-color: #b7bba6;
+      color: var(--ink);
+    }
+
+    .btn:disabled {
+      opacity: 0.48;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-primary {
+      min-width: 208px;
+      background: var(--rust);
+      border-color: var(--rust);
+      color: #fff9ec;
+      box-shadow: 0 3px 4px rgba(121, 61, 30, 0.12);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--rust-hover);
+      border-color: var(--rust-hover);
+      color: #fff9ec;
+    }
+
+    .btn-dark {
+      min-width: 180px;
+      background: var(--dark-btn);
+      border-color: var(--dark-btn);
+      color: var(--paper);
+    }
+
+    .btn-dark:hover:not(:disabled) {
+      background: var(--dark-btn-hover);
+      border-color: var(--dark-btn-hover);
+      color: var(--paper);
+    }
+
+    .btn-reset {
+      color: #8e5537;
+      border-color: #dcc7bb;
+    }
+
+    .btn-reset:hover:not(:disabled) {
+      background: #f7ece5;
+      border-color: #cca996;
+      color: #7d4528;
+    }
+
+    .btn-sm {
+      min-height: 34px;
+      padding: 0 13px;
+      font-size: 12px;
+      min-width: auto;
+    }
+
+    .action-footnote {
+      margin-top: 12px;
+      font-size: 11px;
+      color: #939785;
+      letter-spacing: 0.4px;
+    }
+
+    /* Post-cast archive strip inside action area */
+    .post-cast-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      text-align: left;
+    }
+
+    .memo-input {
+      flex: 1;
+      min-width: 210px;
+      height: 38px;
+      padding: 0 12px;
+      border-radius: 4px;
+      border: 1px solid var(--line-strong);
+      background: var(--paper);
+      font-size: 13px;
+      color: var(--ink);
+    }
+
+    .memo-input::placeholder { color: #9a9e8d; }
+
+    /* Card Bottom Line */
+    .card-bottomline {
+      min-height: 54px;
+      padding: 12px 24px;
+      background: rgba(243, 243, 232, 0.54);
+      border-top: 1px solid #e5e4d8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .card-bottomline .mono-stat {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      letter-spacing: 0.6px;
+      color: var(--ink-soft);
+    }
+
+    /* Right Column: Field Notes & Category Analysis */
+    .field-notes {
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (min-width: 821px) {
+      .field-notes {
+        position: sticky;
+        top: 102px;
+      }
+    }
+
+    .section-label {
+      height: 54px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .section-label-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .section-label-en {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 1.8px;
+      color: #939786;
+      text-transform: uppercase;
+    }
+
+    .notes-placeholder {
+      border: 1px dashed var(--line-strong);
+      border-radius: 5px;
+      background: rgba(250, 248, 241, 0.56);
+      padding: 22px 18px;
+      text-align: left;
+    }
+
+    .notes-placeholder h3 {
+      margin: 0 0 8px;
+      font-family: var(--serif);
+      font-size: 16.5px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .notes-placeholder p {
+      margin: 0;
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    /* Compact Category Picker Grid (3x2) */
+    .category-panel {
+      margin-bottom: 14px;
+    }
+
+    .category-prompt {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+
+    .category-prompt strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .cat-chip {
+      text-align: left;
+      padding: 7px 9px;
+      border-radius: 4px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 4px;
+    }
+
+    .cat-chip:hover:not(:disabled) {
+      border-color: #b9beaa;
+      background: #f1f0e4;
+      transform: translateY(-1px);
+    }
+
+    .cat-chip:disabled {
+      opacity: 0.48;
+      cursor: not-allowed;
+    }
+
+    .cat-chip.active {
+      border-color: var(--rust);
+      background: var(--rust-surface);
+    }
+
+    .cat-chip-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .cat-chip.active .cat-chip-name {
+      color: var(--rust);
+    }
+
+    .cat-chip-meta {
+      font-size: 10px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .cat-chip.active .cat-chip-meta {
+      color: #9e5f47;
+    }
+
+    .sub-role-bar {
+      display: flex;
+      gap: 5px;
+      margin-top: 6px;
+    }
+
+    .sub-role-btn {
+      flex: 1;
+      padding: 4px 6px;
+      border-radius: 3px;
+      border: 1px solid var(--line-strong);
+      background: var(--surface);
+      font-size: 11px;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .sub-role-btn.active {
+      background: #e7eadc;
+      border-color: #adb49b;
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* Right Scheme A: Chamfered Blessing Plaque (祈福切角木牌) */
+    .plaque-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      animation: noteAppear 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .plaque-svg-stage {
+      width: 100%;
+      max-width: 336px;
+      filter: drop-shadow(0 8px 18px rgba(52, 59, 48, 0.09));
+    }
+
+    .plaque-svg-stage svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .plaque-actions {
+      width: 100%;
+      max-width: 336px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .plaque-actions .btn {
+      flex: 1;
+      min-width: 0;
+      min-height: 36px;
+      padding: 0 8px;
+      font-size: 12px;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    .plaque-actions .btn svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+    }
+
+    /* Left-Bottom Detailed Analysis Module */
+    .detail-analysis-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      box-shadow: 0 3px 12px rgba(67, 71, 40, 0.03);
+      overflow: hidden;
+      animation: noteAppear 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    .detail-analysis-grid {
+      padding: 20px 24px 24px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .detail-span-full {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 720px) {
+      .detail-analysis-grid {
+        grid-template-columns: 1fr;
+        padding: 16px;
+      }
+    }
+
+    /* Analysis Cards (Fossildle score-entry aesthetic) */
+    .analysis-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .note-entry {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 14px 16px;
+      animation: noteAppear 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes noteAppear {
+      from { opacity: 0; transform: translateY(7px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .note-entry.tone-good {
+      background: var(--green-surface);
+      border-color: var(--green-border);
+    }
+
+    .note-entry.tone-warn {
+      background: var(--ochre-surface);
+      border-color: var(--ochre-border);
+    }
+
+    .note-entry.tone-caution {
+      background: var(--rust-surface);
+      border-color: var(--rust-border);
+    }
+
+    .note-entry-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .note-entry-kicker {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .verdict-tag {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 3px;
+      border: 1px solid currentColor;
+      line-height: 1.3;
+    }
+
+    .verdict-tag.good { color: var(--green); background: rgba(255, 255, 255, 0.55); }
+    .verdict-tag.warn { color: var(--ochre); background: rgba(255, 255, 255, 0.55); }
+    .verdict-tag.caution { color: var(--rust); background: rgba(255, 255, 255, 0.55); }
+
+    .note-verdict-title {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 500;
+      margin: 2px 0 6px;
+      color: var(--ink);
+      line-height: 1.4;
+    }
+
+    .note-entry-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .note-entry-body {
+      font-size: 12.5px;
+      color: var(--ink-soft);
+      line-height: 1.75;
+      margin: 0;
+    }
+
+    .note-kv-list {
+      margin: 8px 0 0;
+      padding: 8px 0 0;
+      border-top: 1px dashed rgba(155, 159, 141, 0.45);
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--ink-soft);
+    }
+
+    .note-kv-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .note-kv-row span:first-child { color: var(--muted); }
+
+    /* Bottom Strip matching Fossildle */
+    .discovery-bottom {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 368px;
+      gap: 38px;
+      align-items: stretch;
+    }
+
+    .daily-thought {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 20px 6px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .thought-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      color: #8f947e;
+    }
+
+    .thought-kicker {
+      font-family: var(--mono);
+      font-size: 8.5px;
+      letter-spacing: 2px;
+      color: #969a88;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .thought-quote {
+      font-family: var(--serif);
+      font-size: 16px;
+      color: var(--ink-soft);
+      margin: 0;
+    }
+
+    .collection-shortcut {
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      background: rgba(250, 248, 241, 0.72);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      cursor: pointer;
+      transition: background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .collection-shortcut:hover {
+      background: #eceee1;
+      border-color: var(--line-strong);
+    }
+
+    .shortcut-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .shortcut-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .shortcut-stat {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .shortcut-stat strong {
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    /* Archive / History View */
+    .archive-panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: 24px;
+    }
+
+    .archive-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 18px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .archive-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .field-input, .field-select, .field-textarea {
+      border: 1px solid var(--line-strong);
+      border-radius: 4px;
+      background: var(--paper);
+      padding: 8px 12px;
+      font-size: 13px;
+      color: var(--ink);
+    }
+
+    .field-textarea {
+      width: 100%;
+      min-height: 82px;
+      resize: vertical;
+    }
+
+    .archive-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 14px;
+    }
+
+    .archive-card {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: var(--paper);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      transition: border-color 0.16s ease, background 0.16s ease;
+    }
+
+    .archive-card:hover {
+      border-color: var(--line-strong);
+      background: var(--surface);
+    }
+
+    .archive-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .archive-hex {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 500;
+      margin: 0;
+      color: var(--ink);
+    }
+
+    .archive-meta {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .archive-note {
+      font-size: 12.5px;
+      color: var(--ink-soft);
+      background: rgba(243, 243, 232, 0.72);
+      border-left: 2px solid var(--ochre-border);
+      padding: 7px 10px;
+      border-radius: 2px;
+    }
+
+    .archive-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--line);
+    }
+
+    /* Footer */
+    .site-footer {
+      position: relative;
+      z-index: 1;
+      max-width: 1184px;
+      margin: 26px auto 0;
+      padding: 24px 0 32px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--serif);
+      font-size: 15px;
+      color: var(--ink-soft);
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .footer-link-btn {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11.5px;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .footer-link-btn:hover { color: var(--rust); }
+
+    /* Modals & Toast */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(41, 48, 36, 0.44);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 60;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      width: 100%;
+      max-width: 560px;
+      max-height: 88vh;
+      overflow-y: auto;
+      background: var(--paper);
+      border: 1px solid #c9d0b8;
+      border-radius: 5px;
+      padding: 24px;
+      box-shadow: 0 25px 90px rgba(44, 54, 43, 0.22);
+    }
+
+    .modal.modal-wide { max-width: 780px; }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .modal-head h3 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .close-x {
+      border: none;
+      background: transparent;
+      font-size: 22px;
+      line-height: 1;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .alert {
+      padding: 10px 12px;
+      border-radius: 4px;
+      font-size: 12.5px;
+      margin-bottom: 14px;
+      border: 1px solid transparent;
+    }
+
+    .alert-info { background: var(--ochre-surface); border-color: var(--ochre-border); color: #694b1e; }
+    .alert-ok { background: var(--green-surface); border-color: var(--green-border); color: #2f4929; }
+    .alert-err { background: var(--rust-surface); border-color: var(--rust-border); color: #7e331b; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translateX(-50%) translateY(14px);
+      background: #3a4931;
+      border: 1px solid #516344;
+      color: #f3f4e7;
+      padding: 9px 16px;
+      border-radius: 4px;
+      font-size: 12.5px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease, transform 0.22s ease;
+      z-index: 80;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      background: #ecece0;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    @media (max-width: 1080px) {
+      .discovery-layout,
+      .discovery-bottom {
+        grid-template-columns: minmax(0, 1fr) 316px;
+        gap: 26px;
+      }
+      .header-inner,
+      .page-container {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+      .site-footer {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .header-inner { height: auto; padding-top: 14px; padding-bottom: 14px; flex-wrap: wrap; }
+      .header-nav { order: 3; width: 100%; height: 40px; gap: 22px; border-top: 1px solid var(--line); }
+      .discovery-layout,
+      .discovery-bottom { grid-template-columns: 1fr; }
+      .hero-title { font-size: 30px; }
+      .edition-note { text-align: left; }
+      .stage-vertical-caption,
+      .sealed-stamp { display: none; }
+      .yao-slot { grid-template-columns: 38px 1fr 94px; gap: 8px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .coin.idle-float,
+      .status-dot.busy,
+      .yao-slot.just-revealed,
+      .note-entry {
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Topbar -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand" id="brandHomeBtn" role="button" tabindex="0">
+        <svg class="brand-mark" viewBox="0 0 36 36" aria-hidden="true">
+          <rect x="2" y="2" width="32" height="32" rx="4" fill="#a65637" />
+          <rect x="7" y="8" width="22" height="3" rx="1" fill="#faf8f1" />
+          <rect x="7" y="14" width="9" height="3" rx="1" fill="#faf8f1" />
+          <rect x="20" y="14" width="9" height="3" rx="1" fill="#faf8f1" />
+          <rect x="7" y="20" width="22" height="3" rx="1" fill="#faf8f1" />
+          <rect x="7" y="26" width="9" height="3" rx="1" fill="#faf8f1" />
+          <rect x="20" y="26" width="9" height="3" rx="1" fill="#faf8f1" />
+        </svg>
+        <div>
+          <h1 class="brand-name">观象</h1>
+          <p class="brand-sub">六爻起卦与断象手记</p>
+        </div>
+      </div>
+
+      <nav class="header-nav" aria-label="主导航">
+        <button class="nav-link active" data-tab="cast">
+          <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h7M13 12h7M4 18h16"/></svg>
+          <span>今日起卦</span>
+        </button>
+        <button class="nav-link" data-tab="archive">
+          <svg viewBox="0 0 24 24"><path d="M4 7l8-4 8 4-8 4-8-4zM4 12l8 4 8-4M4 17l8 4 8-4"/></svg>
+          <span>卦象档案</span>
+          <span class="nav-count" id="archiveCountBadge">0</span>
+        </button>
+      </nav>
+
+      <div class="header-tools">
+        <div class="live-status">
+          <span class="status-dot" id="headerStatusDot"></span>
+          <span id="headerStatusText">静心待占</span>
+        </div>
+        <button class="icon-btn" id="openSyncBtn" title="GitHub 私有 Gist 云同步" aria-label="云同步">
+          <svg viewBox="0 0 24 24"><path d="M7 18a4.5 4.5 0 0 1-.4-8.98A6 6 0 0 1 18.2 10.6 3.8 3.8 0 0 1 17.5 18H7z"/></svg>
+          <span class="sync-badge-dot" id="syncBadgeDot"></span>
+        </button>
+        <button class="icon-btn" id="openGuideBtn" title="排盘与解卦说明" aria-label="排盘说明">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-container">
+    <!-- Hero Intro -->
+    <section class="page-intro">
+      <div>
+        <div class="eyebrow">THE SIX LINES · 京房纳甲</div>
+        <h2 class="hero-title">心中所念，<em>起卦观象。</em></h2>
+        <p class="hero-desc">先摇六爻成象，再于右侧择所求类别，依用神、世应、五行生克与日辰展卷分析。</p>
+      </div>
+      <div class="edition-note">
+        <div class="edition-kicker">FIELD NOTES / 干支历</div>
+        <div class="edition-date" id="editionDateText">2026 . 11 . 26</div>
+        <div class="edition-ganzhi" id="editionGanZhiText">—</div>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main>
+    <!-- Tab 1: Main Divination Stage -->
+    <div id="tab-cast">
+      <div class="discovery-layout">
+        <!-- Left Column: Hexagram Stage + Detailed Breakdown below -->
+        <div class="left-column">
+        <section class="excavation-card">
+          <div class="card-topline">
+            <div class="card-topline-left">
+              <svg viewBox="0 0 24 24"><path d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4"/></svg>
+              <span id="stageTopTitle">今日卦台</span>
+            </div>
+            <div class="card-topline-right">
+              <span class="status-dot" id="stageStatusDot"></span>
+              <span id="stageStatusText">等待摇爻</span>
+            </div>
+          </div>
+
+          <div class="specimen-stage" id="specimenStage">
+            <div class="orbital-rings" id="orbitalRings" aria-hidden="true">
+              <div class="ring-outer"><div class="ring-inner"></div></div>
+            </div>
+
+            <div class="stage-meta-tl" id="stageMetaTL">UNCAST<br/>0 OF 6</div>
+            <div class="stage-vertical-caption">LIUYAO · NAJIA FIELD RECORD</div>
+            <div class="sealed-stamp" id="sealedStamp">
+              <span class="stamp-en">UNCAST</span>
+              <span class="stamp-zh">待起卦</span>
+            </div>
+
+            <!-- View A: Coins + Progressive 6-Line Stack -->
+            <div id="castingView" style="width:100%; display:flex; flex-direction:column; align-items:center;">
+              <div class="coin-tray" id="coinTray" aria-label="三枚铜钱">
+                <div class="coin idle-float"><span>字</span></div>
+                <div class="coin idle-float"><span>字</span></div>
+                <div class="coin idle-float"><span>字</span></div>
+              </div>
+              <div class="yao-stack-shell" id="yaoStack"></div>
+              <div class="stage-caption-bottom" id="stageCaptionBottom">自初爻而上 · 凡六爻成卦</div>
+            </div>
+
+            <!-- View B: Full Paipan (after 6th yao completes) -->
+            <div id="paipanView" class="paipan-shell hidden"></div>
+          </div>
+
+          <!-- Action Controls -->
+          <div class="stage-action-area" id="stageActionArea">
+            <div id="castingControls">
+              <h3 class="stage-prompt-title" id="promptTitle">六爻未起，静心定念</h3>
+              <p class="stage-prompt-sub" id="promptSub">可一键依次连摇六爻，亦可逐次单独摇爻六次，自下而上显象。</p>
+              <div class="action-btn-row">
+                <button class="btn btn-primary" id="tossAllBtn">
+                  <span>一键摇动六爻</span>
+                  <span aria-hidden="true">&rarr;</span>
+                </button>
+                <button class="btn btn-dark" id="tossOneBtn">
+                  <span>单独摇第 1 爻</span>
+                </button>
+                <button class="btn btn-reset hidden" id="resetCastingBtn">重摇</button>
+              </div>
+              <div class="action-footnote">三枚铜钱法 · 老阳(9)老阴(6)为动爻 · 本地即时装卦</div>
+            </div>
+
+            <div id="completedControls" class="hidden">
+              <div class="post-cast-bar">
+                <input id="postMemoInput" class="memo-input" type="text" maxlength="120" placeholder="可选：记下所问之事或当下心念，方便日后复盘…" />
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  <button class="btn btn-primary btn-sm" id="saveArchiveBtn">收入卦象档案</button>
+                  <button class="btn btn-reset btn-sm" id="recastBtn">重新摇卦</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-bottomline">
+            <span id="bottomLeftStat">尚未开启的卦象</span>
+            <span class="mono-stat" id="bottomRightStat">—</span>
+          </div>
+        </section>
+
+        <!-- Detailed Breakdown below Left Hexagram Card -->
+        <section class="detail-analysis-card hidden" id="detailAnalysisCard">
+          <div class="card-topline">
+            <div class="card-topline-left">
+              <svg viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h9"/></svg>
+              <span id="detailAnalysisHeading">分项断象详解</span>
+            </div>
+            <div class="card-topline-right">
+              <span class="section-label-en" id="detailAnalysisMeta">DETAILED BREAKDOWN</span>
+            </div>
+          </div>
+          <div class="detail-analysis-grid" id="detailAnalysisGrid"></div>
+        </section>
+        </div>
+
+        <!-- Right Column: Compact Category Selector & Verdict Card -->
+        <aside class="field-notes">
+          <div class="section-label">
+            <span class="section-label-title">解卦手记</span>
+            <span class="section-label-en">FIELD ANALYSIS ↘</span>
+          </div>
+
+          <!-- Compact Category Selection Block -->
+          <div class="category-panel" id="categoryPanel">
+            <div class="category-prompt">
+              <strong id="categoryPromptTitle">所求类别</strong>
+              <span id="categoryPromptHint">成卦后点选</span>
+            </div>
+            <div class="category-grid" id="categoryGrid"></div>
+            <div class="sub-role-bar hidden" id="loveSubRoleBar">
+              <button class="sub-role-btn active" data-loverole="general">综合世应</button>
+              <button class="sub-role-btn" data-loverole="wife">男问女（妻财）</button>
+              <button class="sub-role-btn" data-loverole="husband">女问男（官鬼）</button>
+            </div>
+          </div>
+
+          <!-- Placeholder before 6 lines / before category chosen -->
+          <div class="notes-placeholder" id="analysisPlaceholder">
+            <h3 id="placeholderTitle">等待六爻成象</h3>
+            <p id="placeholderDesc">在左侧完成一键摇动六爻或单独摇爻六次后，点选上方「所求类别」，右侧将显现综合断象卡片，左侧下方将展开完整分项解析。</p>
+          </div>
+
+          <!-- Revealed Single Verdict Card -->
+          <div id="verdictCardMount" class="hidden"></div>
+        </aside>
+      </div>
+
+      <!-- Bottom Editorial Strip -->
+      <div class="discovery-bottom">
+        <div class="daily-thought">
+          <svg class="thought-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 3l1.9 5.6L19.5 10.5l-5.6 1.9L12 18l-1.9-5.6L4.5 10.5l5.6-1.9L12 3z"/>
+          </svg>
+          <div>
+            <div class="thought-kicker">SLOW DOWN, OBSERVE THE LINES.</div>
+            <p class="thought-quote" id="dailyQuoteText">“君子居则观其象而玩其辞，动则观其变而玩其占。”</p>
+          </div>
+        </div>
+
+        <div class="collection-shortcut" id="gotoArchiveCard" role="button" tabindex="0">
+          <div class="shortcut-left">
+            <svg width="34" height="34" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+              <rect x="6" y="8" width="18" height="22" rx="2" transform="rotate(-8 6 8)" fill="#eef0e4" stroke="#b5baa3"/>
+              <rect x="12" y="6" width="18" height="22" rx="2" transform="rotate(6 12 6)" fill="#faf8f1" stroke="#9ea58b"/>
+              <path d="M16 14h10M16 18h4M22 18h4M16 22h10" stroke="#7a7e6e" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+            <div>
+              <div class="shortcut-label">你的私人卦馆</div>
+              <div class="shortcut-stat">
+                <strong id="shortcutCount">0</strong>
+                <span>条档案，随时回看</span>
+              </div>
+            </div>
+          </div>
+          <span style="color:var(--muted); font-size:16px;" aria-hidden="true">&rarr;</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Archive / History -->
+    <div id="tab-archive" class="hidden">
+      <section class="archive-panel">
+        <div class="archive-toolbar">
+          <div class="archive-filters">
+            <input id="archiveSearch" class="field-input" style="flex:1; min-width:200px;" type="search" placeholder="搜索卦名、所问记录或复盘笔记…" />
+            <select id="archiveFilterCat" class="field-select">
+              <option value="ALL">全部类别</option>
+              <option value="career">事业 / 求职</option>
+              <option value="wealth">财运 / 求财</option>
+              <option value="love">感情 / 姻缘</option>
+              <option value="study">学业 / 考试</option>
+              <option value="health">健康 / 医药</option>
+              <option value="travel">出行 / 合作</option>
+              <option value="unset">未选类别</option>
+            </select>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn btn-sm btn-dark" id="archiveSyncBtn">同步 Gist</button>
+          </div>
+        </div>
+
+        <div id="archiveGrid" class="archive-grid"></div>
+      </section>
+    </div>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-brand">
+      <span>观象 · 六爻手记</span>
+    </div>
+    <div>慢一点，看看卦象与心念留下了什么。</div>
+    <div class="footer-links">
+      <span>本地自动保存</span>
+      <button class="footer-link-btn" id="footerGuideBtn">排盘规则</button>
+      <button class="footer-link-btn" id="footerSyncBtn">云端备份 &rarr;</button>
+    </div>
+  </footer>
+
+  <!-- Modal: Guide -->
+  <div class="modal-backdrop" id="guideModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>六爻起卦与断象说明</h3>
+        <button class="close-x" data-close="guideModal" aria-label="关闭">&times;</button>
+      </div>
+      <div style="font-size:13px; color:var(--ink-soft); line-height:1.85;">
+        <p style="margin-top:0;"><strong>一、起卦流程</strong><br/>
+        采用传统三枚铜钱法（正面字为 3、背面花为 2），自初爻至上爻共摇六次：和为 <code>7</code> 得少阳、<code>8</code> 得少阴、<code>9</code> 得老阳（动而变阴）、<code>6</code> 得老阴（动而变阳）。支持「一键摇动六爻」依次显象，或「单独摇爻六次」逐爻定象。</p>
+        <p><strong>二、先成卦，再择类别</strong><br/>
+        六爻排定后，在右侧选择所求事项类别，系统将自动定位对应<strong>用神（六亲）</strong>并在左侧卦盘高亮标出，结合<strong>月建旺衰、日辰冲合、旬空、动变生克、伏神与六神</strong>生成结构化断象。</p>
+        <p style="margin-bottom:0;"><strong>三、数据与同步</strong><br/>
+        档案默认保存在本机浏览器 <code>localStorage</code>；如需跨设备同步，可点击右上角云朵图标绑定你自己的 GitHub 私有 Gist。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: GitHub Gist Sync -->
+  <div class="modal-backdrop" id="syncModal">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>GitHub 私有 Gist 云同步</h3>
+        <button class="close-x" data-close="syncModal" aria-label="关闭">&times;</button>
+      </div>
+      <div id="syncAlert"></div>
+      <div class="alert alert-info">
+        纯静态架构：令牌仅存在本机 <code>localStorage</code>，只用于直连 GitHub 读写个人私有 Gist（<code>liuyao-history.json</code>）。
+      </div>
+      <div id="syncDisconnectedView">
+        <p style="font-size:12.5px; margin-top:0; color:var(--ink-soft);">
+          1. <a href="https://github.com/settings/tokens/new?scopes=gist&description=Liuyao%20Field%20Notes" target="_blank" rel="noreferrer">前往 GitHub 生成仅含 <code>gist</code> 权限的 Token &rarr;</a>
+        </p>
+        <div style="margin-bottom:12px;">
+          <input id="tokenInput" class="field-input" style="width:100%;" type="password" placeholder="粘贴 ghp_ 开头的令牌" autocomplete="off" />
+        </div>
+        <button class="btn btn-primary" id="connectGithubBtn" style="width:100%;">连接并双向同步</button>
+      </div>
+      <div id="syncConnectedView" class="hidden">
+        <div style="display:flex; align-items:center; gap:12px; padding:12px; background:var(--surface); border:1px solid var(--line); border-radius:4px; margin-bottom:14px;">
+          <img id="ghAvatar" src="" alt="avatar" style="width:40px; height:40px; border-radius:50%; border:1px solid var(--line-strong);" />
+          <div style="min-width:0;">
+            <div style="font-weight:600;" id="ghUsername"></div>
+            <div style="font-size:12px; color:var(--muted);" id="ghSyncMeta"></div>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-primary btn-sm" id="syncModalNowBtn">立即双向同步</button>
+          <a class="btn btn-sm" id="openGistLink" href="#" target="_blank" rel="noreferrer">查看 Gist</a>
+          <button class="btn btn-reset btn-sm" id="disconnectBtn">断开连接</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Archive Detail -->
+  <div class="modal-backdrop" id="detailModal">
+    <div class="modal modal-wide">
+      <div class="modal-head">
+        <h3 id="detailTitle">卦象档案详情</h3>
+        <button class="close-x" data-close="detailModal" aria-label="关闭">&times;</button>
+      </div>
+      <div id="detailBody"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // =========================================
+    // 1. 传统六爻历法、装卦与五行核心引擎
+    // =========================================
+    const STEMS = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"];
+    const BRANCHES = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
+    const SPIRITS = ["青龙", "朱雀", "勾陈", "螣蛇", "白虎", "玄武"];
+    const YAO_NAMES = ["初爻", "二爻", "三爻", "四爻", "五爻", "上爻"];
+
+    const BRANCH_ELEMENT = {
+      "子": "水", "亥": "水",
+      "寅": "木", "卯": "木",
+      "巳": "火", "午": "火",
+      "申": "金", "酉": "金",
+      "辰": "土", "戌": "土", "丑": "土", "未": "土"
+    };
+
+    const GENERATES = { "木": "火", "火": "土", "土": "金", "金": "水", "水": "木" };
+    const OVERCOMES = { "木": "土", "土": "水", "水": "火", "火": "金", "金": "木" };
+
+    const SIX_HARMONY = {
+      "子": "丑", "丑": "子",
+      "寅": "亥", "亥": "寅",
+      "卯": "戌", "戌": "卯",
+      "辰": "酉", "酉": "辰",
+      "巳": "申", "申": "巳",
+      "午": "未", "未": "午"
+    };
+
+    const ADVANCING_PAIRS = new Set(["亥子", "寅卯", "巳午", "申酉", "丑辰", "辰未", "未戌", "戌丑"]);
+    const RETREATING_PAIRS = new Set(["子亥", "卯寅", "午巳", "酉申", "辰丑", "未辰", "戌未", "丑戌"]);
+
+    // 八卦编码：bit0=初爻, bit1=二爻, bit2=三爻 (1阳 0阴)
+    const TRIGRAMS = {
+      7: { name: "乾", nature: "天", element: "金", inner: ["甲子", "甲寅", "甲辰"], outer: ["壬午", "壬申", "壬戌"] },
+      3: { name: "兑", nature: "泽", element: "金", inner: ["丁巳", "丁卯", "丁丑"], outer: ["丁亥", "丁酉", "丁未"] },
+      5: { name: "离", nature: "火", element: "火", inner: ["己卯", "己丑", "己亥"], outer: ["己酉", "己未", "己巳"] },
+      1: { name: "震", nature: "雷", element: "木", inner: ["庚子", "庚寅", "庚辰"], outer: ["庚午", "庚申", "庚戌"] },
+      6: { name: "巽", nature: "风", element: "木", inner: ["辛丑", "辛亥", "辛酉"], outer: ["辛未", "辛巳", "辛卯"] },
+      2: { name: "坎", nature: "水", element: "水", inner: ["戊寅", "戊辰", "戊午"], outer: ["戊申", "戊戌", "戊子"] },
+      4: { name: "艮", nature: "山", element: "土", inner: ["丙辰", "丙午", "丙申"], outer: ["丙戌", "丙子", "丙寅"] },
+      0: { name: "坤", nature: "地", element: "土", inner: ["乙未", "乙巳", "乙卯"], outer: ["癸丑", "癸亥", "癸酉"] }
+    };
+
+    const PALACE_STAGES = [
+      { mask: 0b000000, stage: "本宫", shi: 6, ying: 3 },
+      { mask: 0b000001, stage: "一世", shi: 1, ying: 4 },
+      { mask: 0b000011, stage: "二世", shi: 2, ying: 5 },
+      { mask: 0b000111, stage: "三世", shi: 3, ying: 6 },
+      { mask: 0b001111, stage: "四世", shi: 4, ying: 1 },
+      { mask: 0b011111, stage: "五世", shi: 5, ying: 2 },
+      { mask: 0b010111, stage: "游魂", shi: 4, ying: 1 },
+      { mask: 0b010000, stage: "归魂", shi: 3, ying: 6 }
+    ];
+
+    const HEXAGRAM_DICT = {
+      "7-7": ["乾为天", "元亨利贞。刚健中正，自强不息，宜守正谋远。"],
+      "7-6": ["天风姤", "女壮，勿用取女。阴气渐萌，宜防微杜渐、慎择合作。"],
+      "7-4": ["天山遁", "亨，小利贞。退避养晦之时，宜以退为进、勿强争锋。"],
+      "7-0": ["天地否", "否之匪人，不利君子贞。上下阻隔，宜守成待时、静待转机。"],
+      "6-0": ["风地观", "盥而不荐，有孚颙若。宜静观其变、审时度势后再定夺。"],
+      "4-0": ["山地剥", "不利有攸往。阳衰阴剥，宜稳固根本、不宜盲目扩张。"],
+      "5-0": ["火地晋", "康侯用锡马蕃庶。光明上进，得助推进，行事顺畅之象。"],
+      "5-7": ["火天大有", "元亨。大有所获，然盛时尤宜谦抑守德、居安思危。"],
+
+      "2-2": ["坎为水", "习坎，有孚，维心亨。重险在前，唯有诚信笃定可渡难关。"],
+      "2-3": ["水泽节", "亨，苦节不可贞。凡事宜有节度，知止方能长久。"],
+      "2-1": ["水雷屯", "元亨利贞，勿用有攸往，利建侯。草创维艰，宜筑基蓄力。"],
+      "2-5": ["水火既济", "亨小，利贞，初吉终乱。事已成而防松懈，须防后患。"],
+      "3-5": ["泽火革", "巳日乃孚，元亨利贞。变革更新之时，时机成熟可除旧布新。"],
+      "1-5": ["雷火丰", "亨，王假之，勿忧，宜日中。盛大丰盈，宜趁势作为勿迟疑。"],
+      "0-5": ["地火明夷", "利艰贞。光明受损，宜韬光养晦、内明外柔以保周全。"],
+      "0-2": ["地水师", "贞，丈人吉，无咎。统众行事须纪律严明、择贤任能。"],
+
+      "4-4": ["艮为山", "艮其背，不获其身。知止而定，静守安稳，不宜躁动。"],
+      "4-5": ["山火贲", "亨，小利有攸往。重文饰修养，小事可成，大事重实质。"],
+      "4-7": ["山天大畜", "利贞，不家食吉，利涉大川。积蓄厚实，大才可施、利远行。"],
+      "4-3": ["山泽损", "有孚，元吉，无咎。损己益人或先损后益，精简反得增益。"],
+      "5-3": ["火泽睽", "小事吉。志向有异、小有分歧，求同存异可成小事。"],
+      "7-3": ["天泽履", "履虎尾，不咥人，亨。处险而慎行守礼，终得平安顺遂。"],
+      "6-3": ["风泽中孚", "豚鱼吉，利涉大川。诚信感通内外，诚意足则大事可成。"],
+      "6-4": ["风山渐", "女归吉，利贞。循序渐进，切忌急躁冒进，稳步可得良果。"],
+
+      "1-1": ["震为雷", "亨，震来虩虩，笑言哑哑。虽有虚惊震动，镇定处之反吉。"],
+      "1-0": ["雷地豫", "利建侯行师。顺时而动、和乐安泰，然防安逸生怠。"],
+      "1-2": ["雷水解", "利西南，无所往，其来复吉。困顿渐解，宜迅速了结余事。"],
+      "1-6": ["雷风恒", "亨，无咎，利贞。重在持之以恒、守常不变，久则有功。"],
+      "0-6": ["地风升", "元亨，用见大人，勿恤。如木破土上升，得贵人扶助渐进。"],
+      "2-6": ["水风井", "改邑不改井，无丧无得。养民不穷，重在修身固本、服务他人。"],
+      "3-6": ["泽风大过", "栋桡，利有攸往，亨。承担过重或非常之举，宜刚柔相济。"],
+      "3-1": ["泽雷随", "元亨利贞，无咎。顺应时势与正道，随机应变可得人和。"],
+
+      "6-6": ["巽为风", "小亨，利有攸往，利见大人。柔顺深入、谦逊沟通，宜借大势。"],
+      "6-7": ["风天小畜", "亨，密云不雨。蓄力未足、尚待时机，宜先修内功。"],
+      "6-5": ["风火家人", "利女贞。重心在内部秩序与家宅和睦，各安其位则吉。"],
+      "6-1": ["风雷益", "利有攸往，利涉大川。损上益下，增益明显，宜果断进取。"],
+      "7-1": ["天雷无妄", "元亨利贞，其匪正有眚。顺应本心与天理，戒除投机妄念。"],
+      "5-1": ["火雷噬嗑", "亨，利用狱。有梗阻待清除，宜明断是非、果决疏通。"],
+      "4-1": ["山雷颐", "贞吉，观颐，自求口实。重在修养、言语与饮食慎节。"],
+      "4-6": ["山风蛊", "元亨，利涉大川。积弊已久待整治，革新整顿反而生机大开。"],
+
+      "5-5": ["离为火", "利贞，亨，畜牝牛吉。依附正道而光明，柔顺中正方能持久。"],
+      "5-4": ["火山旅", "小亨，旅贞吉。行旅飘泊之象，小心谨慎、守分可保小亨。"],
+      "5-6": ["火风鼎", "元吉，亨。革故鼎新、调和众材，立基创业大吉之象。"],
+      "5-2": ["火水未济", "亨，小狐汔济，濡其尾。事未竟、尚差临门一脚，须防收尾疏忽。"],
+      "4-2": ["山水蒙", "亨，匪我求童蒙，童蒙求我。启蒙求教之时，诚心求师可解疑惑。"],
+      "6-2": ["风水涣", "亨，王假有庙。涣散之势待凝聚，宜沟通疏导、立定核心。"],
+      "7-2": ["天水讼", "有孚，窒惕，中吉，终凶。争讼不利久缠，半途和解为上。"],
+      "7-5": ["天火同人", "同人于野，亨，利涉大川。志同道合、广结善缘，协作必成。"],
+
+      "0-0": ["坤为地", "元亨，利牝马之贞。厚德载物，宜顺从配合、以柔克刚。"],
+      "0-1": ["地雷复", "亨，出入无疾，朋来无咎。一阳来复、生机重启，宜循序恢复。"],
+      "0-3": ["地泽临", "元亨利贞，至于八月有凶。势头渐盛、亲临督导，然须早防盛极转衰。"],
+      "0-7": ["地天泰", "小往大来，吉亨。天地交感、上下通畅，诸事顺达之象。"],
+      "1-7": ["雷天大壮", "利贞。气势强盛，忌鲁莽躁进，守正用壮方无悔。"],
+      "3-7": ["泽天夬", "扬于王庭，孚号有厉。决断除弊之时，宜公开坦诚、戒急躁。"],
+      "2-7": ["水天需", "有孚，光亨，贞吉。险在前而蓄势待发，耐心等待最佳时机。"],
+      "2-0": ["水地比", "吉，原筮元永贞，无咎。亲附合作、寻求归属，择善而从则吉。"],
+
+      "3-3": ["兑为泽", "亨，利贞。喜悦沟通之象，言辞和悦且守正道则诸事和顺。"],
+      "3-2": ["泽水困", "亨，贞大人吉，无咎。处境受困、言难尽信，宜坚守心志静待脱困。"],
+      "3-0": ["泽地萃", "亨，王假有庙，利见大人。人才财物聚集，宜聚众共事、防聚而生乱。"],
+      "3-4": ["泽山咸", "亨，利贞，取女吉。心意相感、两情相悦或沟通有默契之象。"],
+      "2-4": ["水山蹇", "利西南，不利东北。前路险阻，宜暂缓硬闯，改弦易辙或求助力。"],
+      "0-4": ["地山谦", "亨，君子有终。谦逊退让反得众人敬重，始终稳妥吉祥。"],
+      "1-4": ["雷山小过", "亨，利贞，可小事，不可大事。宜谦下谨慎，小事可为、大事缓行。"],
+      "1-3": ["雷泽归妹", "征凶，无攸利。名分或步骤尚有未妥，宜端正动机、防冲动行事。"]
+    };
+
+    const CATEGORIES = [
+      { id: "career", shortName: "事业", name: "事业 / 求职", targetRel: "官鬼", yuanRel: "妻财", jiRel: "子孙", desc: "以官鬼为用神，参看父母（文书/单位）与世爻。" },
+      { id: "wealth", shortName: "财运", name: "财运 / 求财", targetRel: "妻财", yuanRel: "子孙", jiRel: "兄弟", desc: "以妻财为用神，子孙为财源，忌兄弟劫财。" },
+      { id: "love",   shortName: "感情", name: "感情 / 姻缘", targetRel: "世应", yuanRel: "", jiRel: "", desc: "重世应相生相合，可按需侧重妻财或官鬼。" },
+      { id: "study",  shortName: "学业", name: "学业 / 考试", targetRel: "父母", yuanRel: "官鬼", jiRel: "妻财", desc: "以父母为成绩文书，官鬼为名次录取，忌妻财分心。" },
+      { id: "health", shortName: "健康", name: "健康 / 医药", targetRel: "世爻", yuanRel: "子孙", jiRel: "官鬼", desc: "重世爻元气，子孙为医药康泰，官鬼为病灶隐忧。" },
+      { id: "travel", shortName: "出行", name: "出行 / 合作", targetRel: "世应", yuanRel: "父母", jiRel: "官鬼", desc: "看世应是否相合相生，并参看父母（行程/契约）与官鬼（阻碍）。" }
+    ];
+
+    const SPIRIT_TRAITS = {
+      "青龙": { short: "喜庆正当", detail: "主吉庆、体面、顺遂与正向增长，事情多走明面正道。" },
+      "朱雀": { short: "口舌文书", detail: "主沟通、消息、文书合约，旺则言辞有力，克战则防争执口舌。" },
+      "勾陈": { short: "稳固迟缓", detail: "主房产土地、老关系、稳重或拖延拉扯，节奏偏慢宜有耐心。" },
+      "螣蛇": { short: "虚惊反复", detail: "主思虑过重、反复摇摆、意外小变数，宜核实细节勿自乱阵脚。" },
+      "白虎": { short: "急促强硬", detail: "主压力大、节奏快、果决强硬或突发冲击，宜稳中带刚。" },
+      "玄武": { short: "隐秘暗昧", detail: "主信息不透明、私下运作、暧昧或暗中损耗，宜留心条款与动机。" }
+    };
+
+    const QUOTES = [
+      "“君子居则观其象而玩其辞，动则观其变而玩其占。”",
+      "“易无思也，无为也，寂然不动，感而遂通。”",
+      "“吉凶悔吝，生乎动者也；观其所动，以审进退。”",
+      "“不占而已矣，占则观象玩辞，反求诸己。”"
+    ];
+
+    function getDayGanZhi(dateObj) {
+      const refUTC = Date.UTC(2024, 0, 1); // 2024-01-01 为甲子日 (index 0)
+      const curUTC = Date.UTC(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+      const diffDays = Math.round((curUTC - refUTC) / 86400000);
+      const idx = ((diffDays % 60) + 60) % 60;
+      const stemIdx = idx % 10;
+      const branchIdx = idx % 12;
+      const xunStart = ((branchIdx - stemIdx) % 12 + 12) % 12;
+      const voidBranches = [BRANCHES[(xunStart + 10) % 12], BRANCHES[(xunStart + 11) % 12]];
+      return {
+        stem: STEMS[stemIdx],
+        branch: BRANCHES[branchIdx],
+        stemIdx,
+        branchIdx,
+        element: BRANCH_ELEMENT[BRANCHES[branchIdx]],
+        voidBranches,
+        voidText: voidBranches.join(""),
+        text: STEMS[stemIdx] + BRANCHES[branchIdx]
+      };
+    }
+
+    // 依十二节气近似交节日期定月建地支
+    function getMonthBranch(dateObj) {
+      const m = dateObj.getMonth() + 1;
+      const d = dateObj.getDate();
+      // [月, 交节日, 交节后地支索引]
+      const cutoffs = [
+        [1, 6, 1],   // 小寒 -> 丑
+        [2, 4, 2],   // 立春 -> 寅
+        [3, 6, 3],   // 惊蛰 -> 卯
+        [4, 5, 4],   // 清明 -> 辰
+        [5, 6, 5],   // 立夏 -> 巳
+        [6, 6, 6],   // 芒种 -> 午
+        [7, 7, 7],   // 小暑 -> 未
+        [8, 8, 8],   // 立秋 -> 申
+        [9, 8, 9],   // 白露 -> 酉
+        [10, 8, 10], // 寒露 -> 戌
+        [11, 7, 11], // 立冬 -> 亥
+        [12, 7, 0]   // 大雪 -> 子
+      ];
+      let branchIdx = 0; // 小寒前为子月
+      for (const [cm, cd, bIdx] of cutoffs) {
+        if (m > cm || (m === cm && d >= cd)) branchIdx = bIdx;
+      }
+      const branch = BRANCHES[branchIdx];
+      return { branch, branchIdx, element: BRANCH_ELEMENT[branch], text: `${branch}月` };
+    }
+
+    function isClash(b1, b2) {
+      return Math.abs(BRANCHES.indexOf(b1) - BRANCHES.indexOf(b2)) === 6;
+    }
+
+    function isHarmony(b1, b2) {
+      return SIX_HARMONY[b1] === b2;
+    }
+
+    function getSixSpirits(dayStemIdx) {
+      const startMap = [0, 0, 1, 1, 2, 3, 4, 4, 5, 5];
+      const start = startMap[dayStemIdx];
+      return Array.from({ length: 6 }, (_, i) => SPIRITS[(start + i) % 6]);
+    }
+
+    function getRelation(palaceEl, lineEl) {
+      if (palaceEl === lineEl) return "兄弟";
+      if (GENERATES[palaceEl] === lineEl) return "子孙";
+      if (OVERCOMES[palaceEl] === lineEl) return "妻财";
+      if (OVERCOMES[lineEl] === palaceEl) return "官鬼";
+      return "父母";
+    }
+
+    function findPalaceInfo(hexCode) {
+      for (let p = 0; p < 8; p++) {
+        const pure = (p << 3) | p;
+        for (const st of PALACE_STAGES) {
+          if ((pure ^ st.mask) === hexCode) {
+            return {
+              palaceKey: p,
+              palaceName: TRIGRAMS[p].name,
+              palaceElement: TRIGRAMS[p].element,
+              stage: st.stage,
+              shi: st.shi,
+              ying: st.ying
+            };
+          }
+        }
+      }
+      return null;
+    }
+
+    function assembleHexagram(yaoValues, dateObj = new Date()) {
+      const baseBits = yaoValues.map(v => (v === 7 || v === 9 ? 1 : 0));
+      const changedBits = yaoValues.map(v => {
+        if (v === 6) return 1;
+        if (v === 9) return 0;
+        return v === 7 ? 1 : 0;
+      });
+      const movingLines = yaoValues
+        .map((v, i) => (v === 6 || v === 9 ? i + 1 : null))
+        .filter(Boolean);
+
+      const lower = (baseBits[2] << 2) | (baseBits[1] << 1) | baseBits[0];
+      const upper = (baseBits[5] << 2) | (baseBits[4] << 1) | baseBits[3];
+      const baseCode = (upper << 3) | lower;
+
+      const cLower = (changedBits[2] << 2) | (changedBits[1] << 1) | changedBits[0];
+      const cUpper = (changedBits[5] << 2) | (changedBits[4] << 1) | changedBits[3];
+
+      const palace = findPalaceInfo(baseCode);
+      const dayGZ = getDayGanZhi(dateObj);
+      const monthInfo = getMonthBranch(dateObj);
+      const spirits = getSixSpirits(dayGZ.stemIdx);
+
+      const baseNaJia = [...TRIGRAMS[lower].inner, ...TRIGRAMS[upper].outer];
+      const changedNaJia = [...TRIGRAMS[cLower].inner, ...TRIGRAMS[cUpper].outer];
+      const pureNaJia = [...TRIGRAMS[palace.palaceKey].inner, ...TRIGRAMS[palace.palaceKey].outer];
+
+      const lines = yaoValues.map((val, idx) => {
+        const gz = baseNaJia[idx];
+        const branch = gz[1];
+        const el = BRANCH_ELEMENT[branch];
+        const cGz = changedNaJia[idx];
+        const cBranch = cGz[1];
+        const cEl = BRANCH_ELEMENT[cBranch];
+        return {
+          pos: idx + 1,
+          val,
+          isYang: baseBits[idx] === 1,
+          isMoving: val === 6 || val === 9,
+          changedIsYang: changedBits[idx] === 1,
+          spirit: spirits[idx],
+          stemBranch: gz,
+          branch,
+          element: el,
+          relation: getRelation(palace.palaceElement, el),
+          changedStemBranch: cGz,
+          changedBranch: cBranch,
+          changedElement: cEl,
+          changedRelation: getRelation(palace.palaceElement, cEl),
+          isShi: palace.shi === idx + 1,
+          isYing: palace.ying === idx + 1,
+          isVoid: dayGZ.voidBranches.includes(branch),
+          changedIsVoid: dayGZ.voidBranches.includes(cBranch),
+          fuShen: null
+        };
+      });
+
+      // 计算伏神（本卦缺失的六亲从本宫首卦借出）
+      const presentRels = new Set(lines.map(l => l.relation));
+      const allRels = ["父母", "兄弟", "子孙", "妻财", "官鬼"];
+      for (const rel of allRels) {
+        if (!presentRels.has(rel)) {
+          for (let idx = 0; idx < 6; idx++) {
+            const pGz = pureNaJia[idx];
+            const pBranch = pGz[1];
+            const pEl = BRANCH_ELEMENT[pBranch];
+            const pRel = getRelation(palace.palaceElement, pEl);
+            if (pRel === rel) {
+              lines[idx].fuShen = {
+                relation: pRel,
+                stemBranch: pGz,
+                branch: pBranch,
+                element: pEl,
+                isVoid: dayGZ.voidBranches.includes(pBranch)
+              };
+              break;
+            }
+          }
+        }
+      }
+
+      const baseDict = HEXAGRAM_DICT[`${upper}-${lower}`] || ["未知卦", ""];
+      const changedDict = HEXAGRAM_DICT[`${cUpper}-${cLower}`] || ["未知卦", ""];
+
+      return {
+        baseName: baseDict[0],
+        baseSummary: baseDict[1],
+        baseUpper: TRIGRAMS[upper].name,
+        baseLower: TRIGRAMS[lower].name,
+        changedName: movingLines.length ? changedDict[0] : null,
+        changedSummary: movingLines.length ? changedDict[1] : null,
+        palaceName: palace.palaceName,
+        palaceElement: palace.palaceElement,
+        palaceStage: palace.stage,
+        shi: palace.shi,
+        ying: palace.ying,
+        movingLines,
+        dayGanZhi: dayGZ.text,
+        dayBranch: dayGZ.branch,
+        dayElement: dayGZ.element,
+        voidBranches: dayGZ.voidBranches,
+        voidText: dayGZ.voidText,
+        monthBranch: monthInfo.branch,
+        monthElement: monthInfo.element,
+        monthText: monthInfo.text,
+        lines
+      };
+    }
+
+    // 评估单个地支在月建与日辰下的状态
+    function evaluateStrength(branch, element, hex) {
+      let score = 0;
+      const tags = [];
+
+      // 月建
+      if (isClash(branch, hex.monthBranch)) {
+        score -= 2;
+        tags.push(`月破（${hex.monthBranch}冲${branch}）`);
+      } else if (element === hex.monthElement) {
+        score += 2;
+        tags.push(`月建临旺（${hex.monthText}）`);
+      } else if (GENERATES[hex.monthElement] === element) {
+        score += 1.5;
+        tags.push(`得月相生（${hex.monthElement}生${element}）`);
+      } else if (OVERCOMES[hex.monthElement] === element) {
+        score -= 1.5;
+        tags.push(`受月克制（${hex.monthElement}克${element}）`);
+      } else if (GENERATES[element] === hex.monthElement) {
+        score -= 0.5;
+        tags.push(`月令休气`);
+      } else {
+        score -= 0.8;
+        tags.push(`月令囚气`);
+      }
+
+      // 日辰
+      const dayEl = hex.dayElement || BRANCH_ELEMENT[hex.dayBranch];
+      if (isClash(branch, hex.dayBranch)) {
+        if (score >= 0.5) {
+          score += 0.5;
+          tags.push(`日冲暗动（${hex.dayBranch}冲${branch}）`);
+        } else {
+          score -= 1.8;
+          tags.push(`日破受冲（${hex.dayBranch}冲${branch}）`);
+        }
+      } else if (isHarmony(branch, hex.dayBranch)) {
+        score += 1;
+        tags.push(`日合相绊（${hex.dayBranch}${branch}合）`);
+      } else if (element === dayEl) {
+        score += 1.5;
+        tags.push(`日辰扶助`);
+      } else if (GENERATES[dayEl] === element) {
+        score += 1.5;
+        tags.push(`得日辰相生`);
+      } else if (OVERCOMES[dayEl] === element) {
+        score -= 1.5;
+        tags.push(`受日辰克制`);
+      }
+
+      const isVoid = (hex.voidBranches || []).includes(branch);
+      if (isVoid) {
+        score -= 0.8;
+        tags.push(`旬空（待出空填实）`);
+      }
+
+      let level = "中和";
+      if (score >= 2) level = "旺相有力";
+      else if (score >= 0.5) level = "偏旺可承";
+      else if (score <= -2) level = "休囚偏弱";
+      else if (score < 0) level = "略显不足";
+
+      return { score, level, tags, isVoid };
+    }
+
+    // 依所选类别生成完整六爻断象分析
+    function analyzeByCategory(hex, categoryId, loveSubRole = "general") {
+      const cat = CATEGORIES.find(c => c.id === categoryId);
+      if (!cat) return null;
+
+      // 兼容旧存档中缺少 monthBranch/dayBranch/voidBranches 字段的情况
+      const safeHex = {
+        ...hex,
+        dayBranch: hex.dayBranch || (hex.dayGanZhi ? hex.dayGanZhi[1] : "子"),
+        dayElement: hex.dayElement || BRANCH_ELEMENT[hex.dayBranch || (hex.dayGanZhi ? hex.dayGanZhi[1] : "子")],
+        monthBranch: hex.monthBranch || getMonthBranch(new Date()).branch,
+        monthElement: hex.monthElement || getMonthBranch(new Date()).element,
+        monthText: hex.monthText || getMonthBranch(new Date()).text,
+        voidBranches: hex.voidBranches || [],
+        voidText: hex.voidText || "—"
+      };
+
+      const shiLine = safeHex.lines.find(l => l.isShi);
+      const yingLine = safeHex.lines.find(l => l.isYing);
+
+      // 决定核心用神六亲
+      let targetRel = cat.targetRel;
+      let yuanRel = cat.yuanRel;
+      let jiRel = cat.jiRel;
+      if (categoryId === "love") {
+        if (loveSubRole === "wife") {
+          targetRel = "妻财"; yuanRel = "子孙"; jiRel = "兄弟";
+        } else if (loveSubRole === "husband") {
+          targetRel = "官鬼"; yuanRel = "妻财"; jiRel = "子孙";
+        }
+      }
+
+      let targetLines = [];
+      let hiddenTarget = null;
+      let targetDescName = "";
+
+      if (targetRel === "世爻") {
+        targetLines = [shiLine];
+        targetDescName = `世爻（${shiLine.relation}·${shiLine.stemBranch}${shiLine.element}）`;
+      } else if (targetRel === "世应") {
+        targetLines = [shiLine, yingLine];
+        targetDescName = `世爻（${YAO_NAMES[shiLine.pos - 1]}）与应爻（${YAO_NAMES[yingLine.pos - 1]}）`;
+      } else {
+        targetLines = safeHex.lines.filter(l => l.relation === targetRel);
+        if (targetLines.length) {
+          // 若两现，优先取动爻或持世之爻为主用神
+          targetLines.sort((a, b) => {
+            const pa = (a.isMoving ? 2 : 0) + (a.isShi ? 1 : 0);
+            const pb = (b.isMoving ? 2 : 0) + (b.isShi ? 1 : 0);
+            return pb - pa;
+          });
+          targetDescName = `${targetRel}（${targetLines.map(l => `${YAO_NAMES[l.pos - 1]}${l.stemBranch}${l.element}`).join(" / ")}）`;
+        } else {
+          // 查伏神
+          const host = safeHex.lines.find(l => l.fuShen && l.fuShen.relation === targetRel);
+          if (host) {
+            hiddenTarget = { host, fu: host.fuShen };
+            targetDescName = `${targetRel}伏藏于${YAO_NAMES[host.pos - 1]}（伏${host.fuShen.stemBranch}${host.fuShen.element}）`;
+          } else {
+            targetDescName = `${targetRel}（未现）`;
+          }
+        }
+      }
+
+      const primaryTarget = targetLines[0] || null;
+      const shiStrength = evaluateStrength(shiLine.branch, shiLine.element, safeHex);
+      const yingStrength = evaluateStrength(yingLine.branch, yingLine.element, safeHex);
+      const primaryStrength = primaryTarget
+        ? evaluateStrength(primaryTarget.branch, primaryTarget.element, safeHex)
+        : (hiddenTarget ? evaluateStrength(hiddenTarget.fu.branch, hiddenTarget.fu.element, safeHex) : { score: -1.5, level: "伏藏待显", tags: ["用神不上卦"], isVoid: false });
+
+      // 计算综合倾向分
+      let totalScore = primaryStrength.score * 0.9 + shiStrength.score * 0.45;
+      if (hiddenTarget) {
+        totalScore -= 0.8;
+        if (GENERATES[hiddenTarget.host.element] === hiddenTarget.fu.element) totalScore += 1.0;
+        if (OVERCOMES[hiddenTarget.host.element] === hiddenTarget.fu.element) totalScore -= 1.0;
+      }
+
+      // 世应关系分析
+      let shiYingText = "";
+      let shiYingRelationLabel = "";
+      if (isClash(shiLine.branch, yingLine.branch)) {
+        shiYingRelationLabel = "世应相冲";
+        shiYingText = `世爻（${shiLine.branch}${shiLine.element}）与应爻（${yingLine.branch}${yingLine.element}）相冲，双方步调或想法易生分歧、变动偏多，不宜仓促定案。`;
+        totalScore -= 1.0;
+      } else if (isHarmony(shiLine.branch, yingLine.branch)) {
+        shiYingRelationLabel = "世应相合";
+        shiYingText = `世爻（${shiLine.branch}）与应爻（${yingLine.branch}）相合，主彼此契合、容易达成共识或获外部照应。`;
+        totalScore += 1.2;
+      } else if (GENERATES[yingLine.element] === shiLine.element) {
+        shiYingRelationLabel = "应来生世";
+        shiYingText = `应爻（${yingLine.element}）生世爻（${shiLine.element}），对方或大环境偏向顺应、支持你，整体较省力。`;
+        totalScore += 1.2;
+      } else if (GENERATES[shiLine.element] === yingLine.element) {
+        shiYingRelationLabel = "世去生应";
+        shiYingText = `世爻（${shiLine.element}）生应爻（${yingLine.element}），你对此事投入较多心血或主动付出，需注意付出与回报平衡。`;
+        totalScore += 0.2;
+      } else if (OVERCOMES[shiLine.element] === yingLine.element) {
+        shiYingRelationLabel = "世克应爻";
+        shiYingText = `世爻（${shiLine.element}）克应爻（${yingLine.element}），你在局中占据主动权，只要世爻有力即可推进掌控。`;
+        totalScore += 0.4;
+      } else if (OVERCOMES[yingLine.element] === shiLine.element) {
+        shiYingRelationLabel = "应来克世";
+        shiYingText = `应爻（${yingLine.element}）克世爻（${shiLine.element}），外部条件或对方要求较高，易感束缚与阻力。`;
+        totalScore -= 1.1;
+      } else {
+        shiYingRelationLabel = "世应比和";
+        shiYingText = `世应同属${shiLine.element}（比和），势均力敌、条件对等，适合平起平坐沟通协作。`;
+        totalScore += 0.6;
+      }
+
+      if (primaryTarget && primaryTarget.isShi && targetRel !== "世爻" && targetRel !== "世应") {
+        shiYingText += ` 且用神「${targetRel}」直接持世，机缘贴近自身，利于主动把握。`;
+        totalScore += 1.0;
+      }
+
+      // 动爻与变爻分析
+      const movingItems = safeHex.lines.filter(l => l.isMoving);
+      const movingNotes = [];
+      if (!movingItems.length) {
+        movingNotes.push("本卦六爻安静无动爻，局势以平稳延续为主，短期不易突发大变，成败全看月日旺衰与自身积累。");
+      } else {
+        for (const m of movingItems) {
+          const parts = [`${YAO_NAMES[m.pos - 1]}${m.relation}（${m.stemBranch}${m.element}）动化${m.changedRelation}（${m.changedStemBranch}${m.changedElement}）`];
+          const pair = m.branch + m.changedBranch;
+          if (ADVANCING_PAIRS.has(pair)) {
+            parts.push("化进神，势头递增");
+            if (m === primaryTarget || (yuanRel && m.relation === yuanRel)) totalScore += 1.0;
+            if (jiRel && m.relation === jiRel) totalScore -= 1.0;
+          } else if (RETREATING_PAIRS.has(pair)) {
+            parts.push("化退神，力量渐减");
+            if (m === primaryTarget) totalScore -= 0.9;
+            if (jiRel && m.relation === jiRel) totalScore += 0.8;
+          } else if (GENERATES[m.changedElement] === m.element) {
+            parts.push("回头生，后续得力");
+            if (m === primaryTarget || (yuanRel && m.relation === yuanRel)) totalScore += 1.1;
+            if (jiRel && m.relation === jiRel) totalScore -= 0.9;
+          } else if (OVERCOMES[m.changedElement] === m.element) {
+            parts.push("回头克，中途受掣");
+            if (m === primaryTarget) totalScore -= 1.4;
+            if (jiRel && m.relation === jiRel) totalScore += 0.9;
+          } else if (isClash(m.branch, m.changedBranch)) {
+            parts.push("化反吟冲散，易反复");
+            if (m === primaryTarget) totalScore -= 1.1;
+          }
+
+          if (primaryTarget && m !== primaryTarget) {
+            if (GENERATES[m.element] === primaryTarget.element) {
+              parts.push(`生助用神${primaryTarget.relation}`);
+              totalScore += 0.9;
+            } else if (OVERCOMES[m.element] === primaryTarget.element) {
+              parts.push(`克制用神${primaryTarget.relation}`);
+              totalScore -= 1.1;
+            }
+          }
+
+          if (categoryId === "health") {
+            if (m.relation === "子孙") { parts.push("医药/调养起效之象"); totalScore += 1.0; }
+            if (m.relation === "官鬼") { parts.push("病扰发动，需及时诊治休养"); totalScore -= 1.1; }
+          }
+
+          movingNotes.push(parts.join("，") + "。");
+        }
+      }
+
+      // 六神细节象意
+      const focusLine = primaryTarget || shiLine;
+      const focusSpirit = SPIRIT_TRAITS[focusLine.spirit];
+      const shiSpirit = SPIRIT_TRAITS[shiLine.spirit];
+      let spiritDetail = `用神所临【${focusLine.spirit}】（${focusSpirit.short}）：${focusSpirit.detail}`;
+      if (focusLine !== shiLine) {
+        spiritDetail += ` 世爻临【${shiLine.spirit}】（${shiSpirit.short}），提示你当下心态偏向${shiSpirit.short}之态。`;
+      }
+
+      // 应期线索
+      const timingHints = [];
+      const refLine = primaryTarget || (hiddenTarget ? hiddenTarget.fu : shiLine);
+      if (refLine.isVoid) {
+        timingHints.push(`用神逢旬空（${safeHex.voidText}空），宜待出空或冲空之日（${refLine.branch}日、${BRANCHES[(BRANCHES.indexOf(refLine.branch) + 6) % 12]}日）见实效。`);
+      } else if (isHarmony(refLine.branch, safeHex.dayBranch)) {
+        const clashB = BRANCHES[(BRANCHES.indexOf(refLine.branch) + 6) % 12];
+        timingHints.push(`用神与日辰相合，多在冲开之日（${clashB}日）或值日（${refLine.branch}日）推进落地。`);
+      } else if (movingItems.length) {
+        const m = movingItems[0];
+        const harmB = SIX_HARMONY[m.branch];
+        timingHints.push(`卦中有动，可留意动爻值日（${m.branch}日）或逢合之日（${harmB}日）的节点变化。`);
+      } else {
+        const clashB = BRANCHES[(BRANCHES.indexOf(refLine.branch) + 6) % 12];
+        timingHints.push(`静卦看冲动与值令，可关注${refLine.branch}日、${clashB}日或生旺用神之五行日。`);
+      }
+
+      // 综合定调
+      let tone = "warn";
+      let verdictBadge = "平 · 稳中待机";
+      let verdictHeadline = "";
+      if (totalScore >= 2.0) {
+        tone = "good";
+        verdictBadge = "吉 · 势头向好";
+        verdictHeadline = `${cat.name}底气较足，顺势推进有望见效。`;
+      } else if (totalScore >= 0.2) {
+        tone = "warn";
+        verdictBadge = "平 · 尚可谋划";
+        verdictHeadline = `${cat.name}机缘与考验并存，重在节奏与细节。`;
+      } else {
+        tone = "caution";
+        verdictBadge = "慎 · 阻力偏多";
+        verdictHeadline = `${cat.name}当前根基略弱或见阻滞，宜缓行蓄力。`;
+      }
+
+      // 高亮行索引集合
+      const highlightTargetPos = new Set(targetLines.map(l => l.pos));
+      if (hiddenTarget) highlightTargetPos.add(hiddenTarget.host.pos);
+
+      return {
+        categoryId,
+        categoryName: cat.name,
+        loveSubRole,
+        tone,
+        verdictBadge,
+        verdictHeadline,
+        targetRel,
+        targetDescName,
+        primaryStrength,
+        hiddenTarget,
+        shiStrength,
+        yingStrength,
+        shiYingRelationLabel,
+        shiYingText,
+        movingNotes,
+        focusSpiritName: focusLine.spirit,
+        focusSpiritShort: focusSpirit.short,
+        spiritDetail,
+        timingHint: timingHints.join(" "),
+        highlightTargetPos,
+        shiPos: shiLine.pos
+      };
+    }
+
+    // =========================================
+    // 2. 本地存储与 GitHub Gist 双向同步
+    // =========================================
+    const HISTORY_KEY = "liuyao.history.v1";
+    const SYNC_KEY = "liuyao.gistSync.v1";
+    const GIST_FILENAME = "liuyao-history.json";
+    const GIST_DESC = "观象六易卜卦 · 个人历史记录存档（自动同步，请勿手动改结构）";
+
+    function loadRecords() {
+      try {
+        const raw = localStorage.getItem(HISTORY_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveRecords(records) {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(records));
+      updateArchiveCount();
+    }
+
+    function loadSyncState() {
+      try {
+        const raw = localStorage.getItem(SYNC_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch {
+        return null;
+      }
+    }
+
+    function saveSyncState(state) {
+      if (state) localStorage.setItem(SYNC_KEY, JSON.stringify(state));
+      else localStorage.removeItem(SYNC_KEY);
+    }
+
+    function mergeRecords(localList, remoteList) {
+      const map = new Map();
+      for (const item of [...localList, ...remoteList]) {
+        if (!item || !item.id) continue;
+        const prev = map.get(item.id);
+        if (!prev || (item.updatedAt || "") > (prev.updatedAt || "")) {
+          map.set(item.id, item);
+        }
+      }
+      return Array.from(map.values()).sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
+    }
+
+    async function ghFetch(token, path, options = {}) {
+      const res = await fetch(`https://api.github.com${path}`, {
+        method: options.method || "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github+json",
+          "X-GitHub-Api-Version": "2022-11-28",
+          ...(options.body ? { "Content-Type": "application/json" } : {})
+        },
+        body: options.body ? JSON.stringify(options.body) : undefined
+      });
+      if (!res.ok) {
+        if (res.status === 401) throw new Error("GitHub 令牌无效或已过期，请重新生成。");
+        if (res.status === 403) throw new Error("GitHub 拒绝请求：请确认令牌勾选了 gist 权限。");
+        if (res.status === 404) throw new Error("未找到对应的云端 Gist 存档。");
+        throw new Error(`GitHub 接口异常（HTTP ${res.status}）`);
+      }
+      return res.json();
+    }
+
+    async function findOrCreateGistAndSync(tokenInput) {
+      setSyncDot("busy");
+      const syncState = loadSyncState();
+      const token = (tokenInput || (syncState && syncState.token) || "").trim();
+      if (!token) throw new Error("请先输入 GitHub 访问令牌。");
+
+      const user = await ghFetch(token, "/user");
+      let gistId = syncState && syncState.gistId;
+      let gistObj = null;
+
+      if (gistId) {
+        try { gistObj = await ghFetch(token, `/gists/${gistId}`); }
+        catch { gistId = null; }
+      }
+
+      if (!gistId) {
+        const gists = await ghFetch(token, "/gists?per_page=100");
+        const found = gists.find(g => g.description === GIST_DESC || (g.files && g.files[GIST_FILENAME]));
+        if (found) {
+          gistId = found.id;
+          gistObj = await ghFetch(token, `/gists/${gistId}`);
+        }
+      }
+
+      const localRecords = loadRecords();
+      let merged = localRecords;
+
+      if (!gistObj) {
+        const created = await ghFetch(token, "/gists", {
+          method: "POST",
+          body: {
+            description: GIST_DESC,
+            public: false,
+            files: {
+              [GIST_FILENAME]: { content: JSON.stringify({ version: 1, records: localRecords }, null, 2) }
+            }
+          }
+        });
+        gistId = created.id;
+      } else {
+        const fileObj = gistObj.files && gistObj.files[GIST_FILENAME];
+        let rawContent = fileObj ? fileObj.content : "";
+        if (fileObj && fileObj.truncated && fileObj.raw_url) {
+          const r = await fetch(fileObj.raw_url, { headers: { Authorization: `Bearer ${token}` } });
+          if (r.ok) rawContent = await r.text();
+        }
+        let remoteRecords = [];
+        if (rawContent) {
+          try {
+            const parsed = JSON.parse(rawContent);
+            remoteRecords = Array.isArray(parsed.records) ? parsed.records : (Array.isArray(parsed) ? parsed : []);
+          } catch {
+            throw new Error("云端 Gist 格式异常，已停止覆盖以保护数据。");
+          }
+        }
+        merged = mergeRecords(localRecords, remoteRecords);
+        saveRecords(merged);
+        await ghFetch(token, `/gists/${gistId}`, {
+          method: "PATCH",
+          body: {
+            files: {
+              [GIST_FILENAME]: { content: JSON.stringify({ version: 1, records: merged }, null, 2) }
+            }
+          }
+        });
+      }
+
+      const nextState = {
+        token,
+        login: user.login,
+        avatarUrl: user.avatar_url,
+        gistId,
+        lastSyncAt: new Date().toISOString()
+      };
+      saveSyncState(nextState);
+      refreshSyncUI();
+      renderArchive();
+      return nextState;
+    }
+
+    async function pushSilentSyncIfConnected() {
+      const state = loadSyncState();
+      if (!state || !state.token) return;
+      try {
+        await findOrCreateGistAndSync(state.token);
+      } catch {
+        setSyncDot("err");
+      }
+    }
+
+    // =========================================
+    // 3. 页面状态与交互控制
+    // =========================================
+    let currentTosses = [];      // [{ coins: [2|3, 2|3, 2|3], sum: 6|7|8|9 }]
+    let currentHex = null;       // assembleHexagram(...) result
+    let currentCastDate = null;
+    let selectedCategoryId = null;
+    let loveSubRole = "general";
+    let savedRecordId = null;
+    let isAnimating = false;
+    let autoTossTimers = [];
+
+    function escapeHtml(str) {
+      return String(str || "").replace(/[&<>"']/g, s => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[s]));
+    }
+
+    function formatTime(iso) {
+      const d = new Date(iso);
+      const pad = n => String(n).padStart(2, "0");
+      return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove("show"), 2400);
+    }
+
+    function tossOneCoinSet() {
+      const coins = Array.from({ length: 3 }, () => (Math.random() < 0.5 ? 2 : 3));
+      const sum = coins[0] + coins[1] + coins[2];
+      return { coins, sum };
+    }
+
+    function describeToss(sum, coins) {
+      const backs = coins.filter(c => c === 2).length;
+      const fronts = 3 - backs;
+      const labelMap = {
+        6: "老阴 ×（动）",
+        7: "少阳",
+        8: "少阴",
+        9: "老阳 ○（动）"
+      };
+      return `${fronts}字${backs}背 · ${labelMap[sum]}`;
+    }
+
+    function renderYaoBarHtml(isYang, isMoving, compact = false) {
+      const cls = `yao-bar${compact ? " compact" : ""}${isMoving ? " moving" : ""}`;
+      if (isYang) return `<span class="${cls}"><span class="yao-seg"></span></span>`;
+      return `<span class="${cls}"><span class="yao-seg"></span><span class="yao-seg"></span></span>`;
+    }
+
+    function animateCoins(coins) {
+      const els = document.querySelectorAll("#coinTray .coin");
+      els.forEach((el, idx) => {
+        el.classList.remove("idle-float", "tossing");
+        void el.offsetWidth;
+        el.classList.add("tossing");
+        const isBack = coins[idx] === 2;
+        el.classList.toggle("back", isBack);
+        el.querySelector("span").textContent = isBack ? "背" : "字";
+        setTimeout(() => el.classList.remove("tossing"), 320);
+      });
+    }
+
+    function updateEditionHeader() {
+      const now = new Date();
+      const pad = n => String(n).padStart(2, "0");
+      const dayGZ = getDayGanZhi(now);
+      const monthInfo = getMonthBranch(now);
+      document.getElementById("editionDateText").textContent =
+        `${now.getFullYear()} . ${pad(now.getMonth() + 1)} . ${pad(now.getDate())}`;
+      document.getElementById("editionGanZhiText").textContent =
+        `${monthInfo.text} · ${dayGZ.text}日 · 旬空 ${dayGZ.voidText}`;
+      document.getElementById("bottomRightStat").textContent =
+        `${monthInfo.text} ${dayGZ.text}日 · 空${dayGZ.voidText}`;
+      const qIdx = now.getDate() % QUOTES.length;
+      document.getElementById("dailyQuoteText").textContent = QUOTES[qIdx];
+    }
+
+    function renderYaoStack(justAddedIdx = -1) {
+      const stack = document.getElementById("yaoStack");
+      stack.innerHTML = YAO_NAMES.map((name, idx) => {
+        const item = currentTosses[idx];
+        const isNext = !item && idx === currentTosses.length;
+        const isMoving = item && (item.sum === 6 || item.sum === 9);
+        const isYang = item && (item.sum === 7 || item.sum === 9);
+        const cls = [
+          "yao-slot",
+          item ? "filled" : "",
+          isNext ? "next-slot" : "",
+          idx === justAddedIdx ? "just-revealed" : ""
+        ].filter(Boolean).join(" ");
+
+        return `
+          <div class="${cls}" data-pos="${idx + 1}">
+            <span class="yao-slot-label">${name}</span>
+            <div class="yao-bar-wrap">
+              ${item ? renderYaoBarHtml(isYang, isMoving, false) : '<span class="yao-placeholder-line"></span>'}
+            </div>
+            <span class="yao-slot-tag ${isMoving ? "moving" : ""}">
+              ${item ? describeToss(item.sum, item.coins) : (isNext ? "待摇此爻…" : "—")}
+            </span>
+          </div>
+        `;
+      }).join("");
+
+      const count = currentTosses.length;
+      const metaTL = document.getElementById("stageMetaTL");
+      const stamp = document.getElementById("sealedStamp");
+      const stageStatus = document.getElementById("stageStatusText");
+      const headerStatus = document.getElementById("headerStatusText");
+      const tossOneBtn = document.getElementById("tossOneBtn");
+      const tossAllBtn = document.getElementById("tossAllBtn");
+      const resetBtn = document.getElementById("resetCastingBtn");
+      const promptTitle = document.getElementById("promptTitle");
+      const promptSub = document.getElementById("promptSub");
+      const bottomLeft = document.getElementById("bottomLeftStat");
+
+      if (count === 0) {
+        metaTL.innerHTML = "UNCAST<br/>0 OF 6";
+        stamp.classList.remove("hidden-stamp");
+        stageStatus.textContent = "等待摇爻";
+        headerStatus.textContent = "静心待占";
+        tossOneBtn.querySelector("span").textContent = "单独摇第 1 爻";
+        tossAllBtn.querySelector("span").textContent = "一键摇动六爻";
+        resetBtn.classList.add("hidden");
+        promptTitle.textContent = "六爻未起，静心定念";
+        promptSub.textContent = "可一键依次连摇六爻，亦可逐次单独摇爻六次，自下而上显象。";
+        bottomLeft.textContent = "尚未开启的卦象";
+      } else if (count < 6) {
+        metaTL.innerHTML = `CASTING<br/>${count} OF 6`;
+        stamp.classList.add("hidden-stamp");
+        stageStatus.textContent = `已摇 ${count} / 6 爻`;
+        headerStatus.textContent = `摇爻中 (${count}/6)`;
+        tossOneBtn.querySelector("span").textContent = `单独摇第 ${count + 1} 爻`;
+        tossAllBtn.querySelector("span").textContent = `一键摇完余下 ${6 - count} 爻`;
+        resetBtn.classList.remove("hidden");
+        promptTitle.textContent = `已得${YAO_NAMES[count - 1]}，续摇第 ${count + 1} 爻`;
+        promptSub.textContent = "继续单独摇爻，或一键依次补全剩余爻象。";
+        bottomLeft.textContent = `起卦进度：${count} / 6 爻`;
+      } else {
+        metaTL.innerHTML = `COMPLETE<br/>6 OF 6`;
+        stamp.classList.add("hidden-stamp");
+        stageStatus.textContent = "六爻已成";
+        headerStatus.textContent = "已成卦 · 待择类别";
+      }
+    }
+
+    function renderPaipanHtml(hex, analysis = null) {
+      const linesDesc = [...hex.lines].reverse();
+      const hasChanged = Boolean(hex.changedName);
+      const targetSet = analysis ? analysis.highlightTargetPos : new Set();
+
+      return `
+        <div class="paipan-head">
+          <div>
+            <h3 class="paipan-name">
+              ${hex.baseName}
+              ${hasChanged ? `<span class="zhi">之</span>${hex.changedName}` : ""}
+            </h3>
+          </div>
+          <div class="paipan-chips">
+            <span class="chip ochre">${hex.palaceName}宫（${hex.palaceElement}）· ${hex.palaceStage}</span>
+            <span class="chip">上${hex.baseUpper}下${hex.baseLower}</span>
+            <span class="chip ${hex.movingLines.length ? "rust" : "green"}">
+              ${hex.movingLines.length ? `第 ${hex.movingLines.join("、")} 爻动` : "六爻安静"}
+            </span>
+          </div>
+        </div>
+
+        <div class="paipan-table-wrap">
+          <table class="paipan-table">
+            <thead>
+              <tr>
+                <th>爻位</th>
+                <th>六神</th>
+                <th>六亲</th>
+                <th>本卦爻象</th>
+                <th>纳甲</th>
+                <th>世应</th>
+                ${hasChanged ? "<th>变爻</th>" : ""}
+              </tr>
+            </thead>
+            <tbody>
+              ${linesDesc.map(l => {
+                const isTarget = targetSet.has(l.pos);
+                const isSelfHl = analysis && l.isShi;
+                const trCls = [isTarget ? "is-target" : "", isSelfHl ? "is-self-hl" : ""].filter(Boolean).join(" ");
+                return `
+                  <tr class="${trCls}">
+                    <td style="font-family:var(--mono); font-size:11px; color:var(--muted);">${YAO_NAMES[l.pos - 1]}</td>
+                    <td style="color:var(--muted);">${l.spirit}</td>
+                    <td>
+                      <strong>${l.relation}</strong>
+                      ${isTarget ? '<span class="target-pill">用神</span>' : ""}
+                      ${l.fuShen ? `<span class="fushen-hint">伏：${l.fuShen.relation} ${l.fuShen.stemBranch}${l.fuShen.element}</span>` : ""}
+                    </td>
+                    <td>
+                      <div style="display:flex; align-items:center;">
+                        ${renderYaoBarHtml(l.isYang, l.isMoving, true)}
+                        ${l.val === 9 ? '<span class="moving-mark">○</span>' : (l.val === 6 ? '<span class="moving-mark">×</span>' : "")}
+                      </div>
+                    </td>
+                    <td>
+                      ${l.stemBranch}${l.element}
+                      ${l.isVoid ? '<span class="void-mark">空</span>' : ""}
+                    </td>
+                    <td>
+                      ${l.isShi ? '<span class="shi-badge shi">世</span>' : ""}
+                      ${l.isYing ? '<span class="shi-badge ying">应</span>' : ""}
+                    </td>
+                    ${hasChanged ? `
+                      <td>
+                        ${l.isMoving
+                          ? `<div style="display:flex; align-items:center; gap:7px;">
+                               ${renderYaoBarHtml(l.changedIsYang, true, true)}
+                               <span style="font-size:11.5px; color:var(--rust);">${l.changedRelation} ${l.changedStemBranch}${l.changedElement}</span>
+                             </div>`
+                          : `<span style="color:#a7aa99; font-size:11.5px;">${l.changedRelation} ${l.changedStemBranch}${l.changedElement}</span>`
+                        }
+                      </td>
+                    ` : ""}
+                  </tr>
+                `;
+              }).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderCategoryButtons() {
+      const grid = document.getElementById("categoryGrid");
+      const ready = Boolean(currentHex);
+      document.getElementById("categoryPromptHint").textContent = ready
+        ? (selectedCategoryId ? "可随时切换重析" : "请点选一项显现分析")
+        : "成卦后解锁";
+
+      grid.innerHTML = CATEGORIES.map(cat => {
+        const isActive = selectedCategoryId === cat.id;
+        return `
+          <button class="cat-chip ${isActive ? "active" : ""}" data-cat="${cat.id}" title="${cat.name}（用神：${cat.targetRel}）" ${ready ? "" : "disabled"}>
+            <span class="cat-chip-name">${cat.shortName}</span>
+            <span class="cat-chip-meta">${cat.targetRel}</span>
+          </button>
+        `;
+      }).join("");
+
+      grid.querySelectorAll(".cat-chip").forEach(btn => {
+        btn.addEventListener("click", () => {
+          if (!currentHex) return;
+          selectedCategoryId = btn.dataset.cat;
+          document.getElementById("toast").classList.remove("show");
+          renderCategoryButtons();
+          renderAnalysisPanel();
+          // 同步刷新左侧盘面用神高亮
+          const analysis = analyzeByCategory(currentHex, selectedCategoryId, loveSubRole);
+          document.getElementById("paipanView").innerHTML = renderPaipanHtml(currentHex, analysis);
+          document.getElementById("headerStatusText").textContent = `已解「${analysis.categoryName}」`;
+        });
+      });
+
+      document.getElementById("loveSubRoleBar").classList.toggle("hidden", !(ready && selectedCategoryId === "love"));
+    }
+
+    const PLAQUE_PALETTES = {
+      good: {
+        bg: "#f1f5ec",
+        border: "#b8c9ad",
+        innerLine: "#cdd9c3",
+        accent: "#486340",
+        badgeBg: "#fafcf7",
+        stamp: "#a65637",
+        ink: "#2f382c",
+        muted: "#6b7464"
+      },
+      warn: {
+        bg: "#fbf5e8",
+        border: "#d9bf8e",
+        innerLine: "#e5d2ac",
+        accent: "#8e652f",
+        badgeBg: "#fffdf7",
+        stamp: "#a65637",
+        ink: "#363129",
+        muted: "#7d7261"
+      },
+      caution: {
+        bg: "#fcf1eb",
+        border: "#d8a995",
+        innerLine: "#e5c1b2",
+        accent: "#a65637",
+        badgeBg: "#fffaf7",
+        stamp: "#a65637",
+        ink: "#3b2f2a",
+        muted: "#7e6b62"
+      }
+    };
+
+    function escapeXml(str) {
+      return String(str || "").replace(/[&<>"']/g, s => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;"
+      }[s]));
+    }
+
+    function visualUnits(ch) {
+      return /[\u0000-\u00ff]/.test(ch) ? 0.56 : 1;
+    }
+
+    function trimVisual(str, maxUnits) {
+      let sum = 0;
+      let out = "";
+      for (const ch of String(str || "")) {
+        const w = visualUnits(ch);
+        if (sum + w > maxUnits) return out + "…";
+        out += ch;
+        sum += w;
+      }
+      return out;
+    }
+
+    function wrapVisualLines(str, maxUnits, maxLines = 2) {
+      const lines = [];
+      let cur = "";
+      let sum = 0;
+      for (const ch of String(str || "")) {
+        const w = visualUnits(ch);
+        if (sum + w > maxUnits && cur) {
+          lines.push(cur);
+          cur = ch;
+          sum = w;
+          if (lines.length === maxLines - 1) {
+            // 剩余全部塞进最后一行并安全截断
+            const rest = String(str || "").slice(lines.join("").length);
+            lines.push(trimVisual(rest, maxUnits));
+            return lines;
+          }
+        } else {
+          cur += ch;
+          sum += w;
+        }
+      }
+      if (cur) lines.push(cur);
+      return lines;
+    }
+
+    function getDisplaySiteUrl() {
+      try {
+        if (typeof window !== "undefined" && window.location) {
+          const { protocol, origin, pathname, href } = window.location;
+          if (protocol === "http:" || protocol === "https:") {
+            const cleanPath = pathname === "/" ? "" : pathname.replace(/\/$/, "");
+            return trimVisual(`${origin}${cleanPath}`, 36);
+          }
+          if (href) {
+            return trimVisual(href.split(/[?#]/)[0], 36);
+          }
+        }
+      } catch {}
+      return "guanxiang · liuyao";
+    }
+
+    function buildPlaqueSvg(hex, analysis, options = {}) {
+      const {
+        castDate = currentCastDate || new Date(),
+        uid = "live",
+        standalone = false
+      } = options;
+
+      const p = PLAQUE_PALETTES[analysis.tone] || PLAQUE_PALETTES.warn;
+      const d = castDate instanceof Date ? castDate : new Date(castDate);
+      const pad = n => String(n).padStart(2, "0");
+      const dateDot = `${d.getFullYear()} . ${pad(d.getMonth() + 1)} . ${pad(d.getDate())}`;
+      const serialNo = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}`;
+      const siteUrl = getDisplaySiteUrl();
+
+      const serifFont = "'Iowan Old Style','Palatino Linotype','Songti SC','Noto Serif SC','Noto Serif CJK SC',Georgia,serif";
+      const sansFont = "-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif";
+      const monoFont = "'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace";
+
+      // 微缩六爻绘制 (居中 x=168, 宽 74, 高 44)
+      const hexLinesDesc = [...hex.lines].reverse();
+      const barW = 74;
+      const barH = 4.6;
+      const barGap = 3.2;
+      const segW = (barW - 10) / 2;
+      const hexX = 168 - barW / 2;
+      const hexY0 = 122;
+      const miniHexSvg = hexLinesDesc.map((l, idx) => {
+        const y = hexY0 + idx * (barH + barGap);
+        const fill = l.isMoving ? p.stamp : p.ink;
+        if (l.isYang) {
+          return `<rect x="${hexX}" y="${y.toFixed(1)}" width="${barW}" height="${barH}" rx="1.2" fill="${fill}" />`;
+        }
+        return `
+          <rect x="${hexX}" y="${y.toFixed(1)}" width="${segW}" height="${barH}" rx="1.2" fill="${fill}" />
+          <rect x="${hexX + segW + 10}" y="${y.toFixed(1)}" width="${segW}" height="${barH}" rx="1.2" fill="${fill}" />
+        `;
+      }).join("");
+
+      // 卦名与宫位
+      const movingShort = hex.movingLines.length ? `第${hex.movingLines.join("、")}爻动` : "六爻安静";
+      const palaceLine = `${hex.palaceName}宫（${hex.palaceElement}）· ${hex.palaceStage} · ${movingShort}`;
+
+      // 断语居中换行（最多两行）
+      const quoteLines = wrapVisualLines(`“${analysis.verdictHeadline}”`, 16.5, 2);
+      const quoteBaseY = quoteLines.length === 1 ? 259 : 250;
+      const quoteSvg = quoteLines.map((line, idx) => `
+        <text x="168" y="${quoteBaseY + idx * 21}" text-anchor="middle" font-family="${serifFont}" font-size="14.5" fill="${p.ink}">${escapeXml(line)}</text>
+      `).join("");
+
+      const targetShort = trimVisual(analysis.targetDescName, 16.5);
+      const movingBrief = hex.movingLines.length ? `${movingShort} → 变${hex.changedName}` : "六爻安静（无动爻）";
+      const ganZhiLine = `${hex.monthText || ""} · ${hex.dayGanZhi}日 · 空${hex.voidText || "—"}`;
+      const badgeW = 112;
+      const badgeX = 168 - badgeW / 2;
+
+      const plaqueContent = `
+        <!-- 顶部细绳结 -->
+        <path d="M168 2 C161 11, 163 23, 168 39 C173 23, 175 11, 168 2 Z" fill="none" stroke="${p.stamp}" stroke-width="1.7" />
+        <circle cx="168" cy="5.5" r="2.5" fill="${p.stamp}" />
+
+        <!-- 切角祈福木牌主体（含镂空穿绳孔 evenodd） -->
+        <path fill-rule="evenodd"
+              d="M64 20 L272 20 L328 74 L328 494 Q328 508 314 508 L22 508 Q8 508 8 494 L8 74 Z M168 38.5 A7.5 7.5 0 1 0 168 53.5 A7.5 7.5 0 1 0 168 38.5 Z"
+              fill="${p.bg}" stroke="${p.border}" stroke-width="1.4" />
+        <path fill-rule="evenodd"
+              d="M64 20 L272 20 L328 74 L328 494 Q328 508 314 508 L22 508 Q8 508 8 494 L8 74 Z M168 38.5 A7.5 7.5 0 1 0 168 53.5 A7.5 7.5 0 1 0 168 38.5 Z"
+              fill="url(#plaqueGrain-${uid})" />
+        <!-- 穿绳孔内描边 -->
+        <circle cx="168" cy="46" r="7.5" fill="none" stroke="${p.border}" stroke-width="1.3" />
+        <!-- 内层细线切角框 -->
+        <path d="M69 29 L267 29 L319 79 L319 490 Q319 499 310 499 L26 499 Q17 499 17 490 L17 79 Z"
+              fill="none" stroke="${p.innerLine}" stroke-width="1" />
+
+        <!-- 顶部编号与类别 -->
+        <text x="168" y="74" text-anchor="middle" font-family="${monoFont}" font-size="10" letter-spacing="1.6" fill="${p.muted}">
+          ${escapeXml(`NO.${serialNo} · ${analysis.categoryName}`)}
+        </text>
+
+        <!-- 定调徽章 -->
+        <line x1="68" y1="98" x2="${badgeX - 10}" y2="98" stroke="${p.border}" stroke-width="1" />
+        <line x1="${badgeX + badgeW + 10}" y1="98" x2="268" y2="98" stroke="${p.border}" stroke-width="1" />
+        <rect x="${badgeX}" y="86" width="${badgeW}" height="23" rx="2.5" fill="${p.badgeBg}" stroke="${p.accent}" stroke-width="1" />
+        <text x="168" y="101.5" text-anchor="middle" font-family="${sansFont}" font-size="11.5" font-weight="600" fill="${p.accent}">
+          ${escapeXml(analysis.verdictBadge)}
+        </text>
+
+        <!-- 微缩六爻符号 -->
+        ${miniHexSvg}
+
+        <!-- 卦名与宫位 -->
+        <text x="168" y="196" text-anchor="middle" font-family="${serifFont}" font-size="${hex.changedName ? 22 : 25}" font-weight="500" fill="${p.ink}">
+          ${escapeXml(hex.baseName)}${hex.changedName ? `<tspan font-size="14" fill="${p.muted}"> 之 </tspan>${escapeXml(hex.changedName)}` : ""}
+        </text>
+        <text x="168" y="216" text-anchor="middle" font-family="${sansFont}" font-size="11.2" fill="${p.muted}">
+          ${escapeXml(palaceLine)}
+        </text>
+
+        <!-- 核心断语 -->
+        ${quoteSvg}
+
+        <!-- 虚线分割与核心四项摘要 -->
+        <line x1="34" y1="292" x2="302" y2="292" stroke="${p.border}" stroke-width="1" stroke-dasharray="3.5 3.5" />
+
+        <g font-family="${sansFont}" font-size="11.8">
+          <text x="34" y="316" fill="${p.muted}">核心用神</text>
+          <text x="302" y="316" text-anchor="end" font-weight="600" fill="${p.ink}">${escapeXml(targetShort)}</text>
+
+          <text x="34" y="340" fill="${p.muted}">旺衰世应</text>
+          <text x="302" y="340" text-anchor="end" font-weight="600" fill="${p.ink}">${escapeXml(`${analysis.primaryStrength.level} · ${analysis.shiYingRelationLabel}`)}</text>
+
+          <text x="34" y="364" fill="${p.muted}">动变脉络</text>
+          <text x="302" y="364" text-anchor="end" font-weight="600" fill="${p.ink}">${escapeXml(trimVisual(movingBrief, 16.5))}</text>
+
+          <text x="34" y="388" fill="${p.muted}">主临六神</text>
+          <text x="302" y="388" text-anchor="end" font-weight="600" fill="${p.ink}">${escapeXml(`${analysis.focusSpiritName} · ${analysis.focusSpiritShort}`)}</text>
+        </g>
+
+        <!-- 日期干支与朱砂方印 -->
+        <line x1="34" y1="406" x2="302" y2="406" stroke="${p.innerLine}" stroke-width="1" />
+        <text x="34" y="431" font-family="${monoFont}" font-size="11.5" letter-spacing="1.2" fill="${p.ink}">${escapeXml(dateDot)}</text>
+        <text x="34" y="449" font-family="${sansFont}" font-size="10.8" fill="${p.muted}">${escapeXml(ganZhiLine)}</text>
+
+        <g transform="translate(272, 419) rotate(-4)">
+          <rect x="0" y="0" width="29" height="29" rx="3" fill="rgba(166,86,55,0.06)" stroke="${p.stamp}" stroke-width="1.5" />
+          <text x="14.5" y="12.5" text-anchor="middle" font-family="${serifFont}" font-size="10.5" font-weight="700" fill="${p.stamp}">观</text>
+          <text x="14.5" y="24" text-anchor="middle" font-family="${serifFont}" font-size="10.5" font-weight="700" fill="${p.stamp}">象</text>
+        </g>
+
+        <!-- 最底部网页地址 -->
+        <line x1="34" y1="468" x2="302" y2="468" stroke="${p.innerLine}" stroke-width="0.9" stroke-dasharray="2 3" />
+        <text x="168" y="486" text-anchor="middle" font-family="${monoFont}" font-size="9.5" letter-spacing="0.4" fill="${p.muted}">
+          ${escapeXml(siteUrl)}
+        </text>
+      `;
+
+      const xmlHead = standalone ? '<?xml version="1.0" encoding="UTF-8"?>\n' : "";
+      const sizeAttrs = standalone
+        ? ' width="336" height="516"'
+        : ` role="img" aria-label="${escapeXml(`${hex.baseName} ${analysis.verdictBadge} 卦签`)}"`;
+
+      return `${xmlHead}<svg xmlns="http://www.w3.org/2000/svg"${sizeAttrs} viewBox="0 0 336 516">
+          <defs>
+            <pattern id="plaqueGrain-${uid}" width="6" height="6" patternUnits="userSpaceOnUse">
+              <circle cx="1.2" cy="1.2" r="0.6" fill="rgba(82,87,68,0.14)" />
+            </pattern>
+          </defs>
+          ${plaqueContent}
+        </svg>`;
+    }
+
+    function buildPlaqueFilename(hex, castDate, ext) {
+      const d = castDate instanceof Date ? castDate : new Date(castDate);
+      const pad = n => String(n).padStart(2, "0");
+      const dateTag = `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}`;
+      return `观象卦签-${hex.baseName}-${dateTag}.${ext}`;
+    }
+
+    function triggerBlobDownload(blob, filename) {
+      const dlUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = dlUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(dlUrl), 1000);
+    }
+
+    function exportPlaqueSvg(hex, analysis, castDate = new Date()) {
+      const svgStr = buildPlaqueSvg(hex, analysis, {
+        castDate,
+        uid: `svg-${Date.now()}`,
+        standalone: true
+      });
+      const blob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
+      triggerBlobDownload(blob, buildPlaqueFilename(hex, castDate, "svg"));
+      showToast("已保存纯卡片矢量 SVG");
+    }
+
+    function exportPlaquePng(hex, analysis, castDate = new Date()) {
+      const svgStr = buildPlaqueSvg(hex, analysis, {
+        castDate,
+        uid: `png-${Date.now()}`,
+        standalone: true
+      });
+      const blob = new Blob([svgStr], { type: "image/svg+xml;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const img = new Image();
+      img.onload = () => {
+        const scale = 3;
+        const canvas = document.createElement("canvas");
+        canvas.width = 336 * scale;
+        canvas.height = 516 * scale;
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.scale(scale, scale);
+        ctx.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+
+        canvas.toBlob(pngBlob => {
+          if (!pngBlob) {
+            showToast("导出失败，请重试");
+            return;
+          }
+          triggerBlobDownload(pngBlob, buildPlaqueFilename(hex, castDate, "png"));
+          showToast("已保存透明底高清 PNG");
+        }, "image/png");
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        showToast("生成图片失败，请重试");
+      };
+      img.src = url;
+    }
+
+    function renderVerdictCardHtml(hex, analysis, showJump = true, options = {}) {
+      const uid = options.uid || "live";
+      const castDate = options.castDate || currentCastDate || new Date();
+      const savePngBtnId = options.savePngBtnId || "downloadPlaquePngBtn";
+      const saveSvgBtnId = options.saveSvgBtnId || "downloadPlaqueSvgBtn";
+      const svgMarkup = buildPlaqueSvg(hex, analysis, { castDate, uid, standalone: false });
+
+      return `
+        <div class="plaque-wrap">
+          <div class="plaque-svg-stage">${svgMarkup}</div>
+          <div class="plaque-actions">
+            <button type="button" class="btn btn-dark" id="${savePngBtnId}">
+              <svg viewBox="0 0 24 24"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14"/></svg>
+              <span>导出 PNG</span>
+            </button>
+            <button type="button" class="btn" id="${saveSvgBtnId}">
+              <svg viewBox="0 0 24 24"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14"/></svg>
+              <span>导出 SVG</span>
+            </button>
+            ${showJump ? `
+              <button type="button" class="btn" onclick="document.getElementById('detailAnalysisCard').scrollIntoView({behavior:'smooth', block:'start'})">
+                <span>详解 &darr;</span>
+              </button>
+            ` : ""}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDetailedAnalysisHtml(hex, analysis) {
+      const strengthText = analysis.hiddenTarget
+        ? `本卦用神「${analysis.targetRel}」未直接显现，伏藏于${YAO_NAMES[analysis.hiddenTarget.host.pos - 1]}（飞神${analysis.hiddenTarget.host.relation}${analysis.hiddenTarget.host.element}）之下。伏神自身在月日下${analysis.primaryStrength.level}（${analysis.primaryStrength.tags.join("、")}）。`
+        : `主用神${analysis.targetDescName}，在当月当日呈现「${analysis.primaryStrength.level}」之象（${analysis.primaryStrength.tags.join("、")}）。`;
+
+      return `
+        <article class="note-entry" style="animation-delay:40ms;">
+          <div class="note-entry-head">
+            <span class="note-entry-title">一、用神旺衰与月日裁断</span>
+            <span class="note-entry-kicker">${hex.monthText} · ${hex.dayGanZhi}日</span>
+          </div>
+          <p class="note-entry-body">${strengthText}</p>
+        </article>
+
+        <article class="note-entry" style="animation-delay:90ms;">
+          <div class="note-entry-head">
+            <span class="note-entry-title">二、世应立场（我与对方）</span>
+            <span class="note-entry-kicker">${analysis.shiYingRelationLabel}</span>
+          </div>
+          <p class="note-entry-body">${analysis.shiYingText}</p>
+        </article>
+
+        <article class="note-entry" style="animation-delay:140ms;">
+          <div class="note-entry-head">
+            <span class="note-entry-title">三、动爻与变卦脉络</span>
+            <span class="note-entry-kicker">${hex.movingLines.length ? `${hex.movingLines.length} 处动爻` : "静卦"}</span>
+          </div>
+          <p class="note-entry-body">${analysis.movingNotes.join("<br/>")}</p>
+        </article>
+
+        <article class="note-entry" style="animation-delay:190ms;">
+          <div class="note-entry-head">
+            <span class="note-entry-title">四、六神细节与应期线索</span>
+            <span class="note-entry-kicker">DETAILS & TIMING</span>
+          </div>
+          <p class="note-entry-body">${analysis.spiritDetail}</p>
+          <p class="note-entry-body" style="margin-top:8px; padding-top:8px; border-top:1px dashed var(--line);">
+            <strong>应期参考：</strong>${analysis.timingHint}
+          </p>
+        </article>
+
+        <article class="note-entry detail-span-full" style="animation-delay:240ms;">
+          <div class="note-entry-head">
+            <span class="note-entry-title">五、卦辞本义</span>
+            <span class="note-entry-kicker">${hex.baseName}${hex.changedName ? ` → ${hex.changedName}` : ""}</span>
+          </div>
+          <p class="note-entry-body">
+            <strong>【${hex.baseName}】</strong>${hex.baseSummary}
+            ${hex.changedName ? `<br/><strong>【变·${hex.changedName}】</strong>${hex.changedSummary}` : ""}
+          </p>
+        </article>
+      `;
+    }
+
+    function renderAnalysisPanel() {
+      const placeholder = document.getElementById("analysisPlaceholder");
+      const verdictMount = document.getElementById("verdictCardMount");
+      const detailCard = document.getElementById("detailAnalysisCard");
+      const detailGrid = document.getElementById("detailAnalysisGrid");
+      const pTitle = document.getElementById("placeholderTitle");
+      const pDesc = document.getElementById("placeholderDesc");
+
+      if (!currentHex) {
+        placeholder.classList.remove("hidden");
+        verdictMount.classList.add("hidden");
+        detailCard.classList.add("hidden");
+        pTitle.textContent = "等待六爻成象";
+        pDesc.textContent = "在左侧完成一键摇动六爻或单独摇爻六次后，点选上方「所求类别」，右侧将显现综合断象卡片，左侧下方将展开完整分项解析。";
+        return;
+      }
+
+      if (!selectedCategoryId) {
+        placeholder.classList.remove("hidden");
+        verdictMount.classList.add("hidden");
+        detailCard.classList.add("hidden");
+        pTitle.textContent = `已得「${currentHex.baseName}」，请选所求类别`;
+        pDesc.textContent = "点选上方任意一项所求类别，系统将立即高亮对应「用神」，于此处显现综合断象卡片，并在左侧卦盘下方展开分项详解。";
+        return;
+      }
+
+      const analysis = analyzeByCategory(currentHex, selectedCategoryId, loveSubRole);
+      placeholder.classList.add("hidden");
+      verdictMount.classList.remove("hidden");
+      verdictMount.innerHTML = renderVerdictCardHtml(currentHex, analysis, true, {
+        uid: "live",
+        castDate: currentCastDate || new Date(),
+        savePngBtnId: "downloadPlaquePngBtn",
+        saveSvgBtnId: "downloadPlaqueSvgBtn"
+      });
+      const dlPngBtn = document.getElementById("downloadPlaquePngBtn");
+      if (dlPngBtn) {
+        dlPngBtn.onclick = () => exportPlaquePng(currentHex, analysis, currentCastDate || new Date());
+      }
+      const dlSvgBtn = document.getElementById("downloadPlaqueSvgBtn");
+      if (dlSvgBtn) {
+        dlSvgBtn.onclick = () => exportPlaqueSvg(currentHex, analysis, currentCastDate || new Date());
+      }
+
+      detailCard.classList.remove("hidden");
+      document.getElementById("detailAnalysisHeading").textContent = `分项断象详解 · ${analysis.categoryName}`;
+      document.getElementById("detailAnalysisMeta").textContent = `${currentHex.monthText} · ${currentHex.dayGanZhi}日`;
+      detailGrid.innerHTML = renderDetailedAnalysisHtml(currentHex, analysis);
+    }
+
+    function finalizeHexagram() {
+      currentCastDate = new Date();
+      const yaoValues = currentTosses.map(t => t.sum);
+      currentHex = assembleHexagram(yaoValues, currentCastDate);
+      savedRecordId = null;
+
+      // 切换左侧为完整排盘视图
+      document.getElementById("specimenStage").classList.add("is-complete");
+      document.getElementById("orbitalRings").classList.add("dimmed");
+      document.getElementById("castingView").classList.add("hidden");
+      const paipanView = document.getElementById("paipanView");
+      paipanView.classList.remove("hidden");
+      paipanView.innerHTML = renderPaipanHtml(currentHex, null);
+
+      document.getElementById("castingControls").classList.add("hidden");
+      document.getElementById("completedControls").classList.remove("hidden");
+      document.getElementById("postMemoInput").value = "";
+
+      const saveBtn = document.getElementById("saveArchiveBtn");
+      saveBtn.disabled = false;
+      saveBtn.textContent = "收入卦象档案";
+
+      document.getElementById("stageTopTitle").textContent =
+        `${currentHex.baseName}${currentHex.changedName ? ` 之 ${currentHex.changedName}` : ""}`;
+      document.getElementById("bottomLeftStat").textContent = currentHex.movingLines.length
+        ? `第 ${currentHex.movingLines.join("、")} 爻发动 → 变「${currentHex.changedName}」`
+        : "六爻安静 · 无动爻";
+
+      renderCategoryButtons();
+      renderAnalysisPanel();
+      showToast(`六爻已成：${currentHex.baseName}，请在右侧选择所求类别`);
+    }
+
+    function clearAutoTimers() {
+      for (const id of autoTossTimers) clearTimeout(id);
+      autoTossTimers = [];
+    }
+
+    function resetAll() {
+      clearAutoTimers();
+      isAnimating = false;
+      currentTosses = [];
+      currentHex = null;
+      currentCastDate = null;
+      selectedCategoryId = null;
+      loveSubRole = "general";
+      savedRecordId = null;
+
+      document.getElementById("specimenStage").classList.remove("is-complete");
+      document.getElementById("orbitalRings").classList.remove("dimmed");
+      document.getElementById("castingView").classList.remove("hidden");
+      document.getElementById("paipanView").classList.add("hidden");
+      document.getElementById("castingControls").classList.remove("hidden");
+      document.getElementById("completedControls").classList.add("hidden");
+      document.getElementById("stageTopTitle").textContent = "今日卦台";
+
+      document.querySelectorAll("#coinTray .coin").forEach(el => {
+        el.classList.remove("back", "tossing");
+        el.classList.add("idle-float");
+        el.querySelector("span").textContent = "字";
+      });
+
+      document.getElementById("tossAllBtn").disabled = false;
+      document.getElementById("tossOneBtn").disabled = false;
+      document.querySelectorAll("#loveSubRoleBar .sub-role-btn").forEach(b => {
+        b.classList.toggle("active", b.dataset.loverole === "general");
+      });
+
+      renderYaoStack();
+      renderCategoryButtons();
+      renderAnalysisPanel();
+    }
+
+    function performSingleToss() {
+      if (isAnimating || currentTosses.length >= 6) return;
+      isAnimating = true;
+      document.getElementById("tossOneBtn").disabled = true;
+      document.getElementById("tossAllBtn").disabled = true;
+
+      const res = tossOneCoinSet();
+      animateCoins(res.coins);
+
+      const t = setTimeout(() => {
+        currentTosses.push(res);
+        const idx = currentTosses.length - 1;
+        renderYaoStack(idx);
+        isAnimating = false;
+
+        if (currentTosses.length >= 6) {
+          const t2 = setTimeout(() => finalizeHexagram(), 420);
+          autoTossTimers.push(t2);
+        } else {
+          document.getElementById("tossOneBtn").disabled = false;
+          document.getElementById("tossAllBtn").disabled = false;
+        }
+      }, 300);
+      autoTossTimers.push(t);
+    }
+
+    function performAutoSixToss() {
+      if (isAnimating) return;
+      if (currentTosses.length >= 6) resetAll();
+
+      isAnimating = true;
+      document.getElementById("tossOneBtn").disabled = true;
+      document.getElementById("tossAllBtn").disabled = true;
+
+      const remaining = 6 - currentTosses.length;
+      for (let step = 0; step < remaining; step++) {
+        const delay = step * 330;
+        const tid = setTimeout(() => {
+          const res = tossOneCoinSet();
+          animateCoins(res.coins);
+          const tid2 = setTimeout(() => {
+            currentTosses.push(res);
+            renderYaoStack(currentTosses.length - 1);
+            if (currentTosses.length === 6) {
+              isAnimating = false;
+              const tid3 = setTimeout(() => finalizeHexagram(), 440);
+              autoTossTimers.push(tid3);
+            }
+          }, 150);
+          autoTossTimers.push(tid2);
+        }, delay);
+        autoTossTimers.push(tid);
+      }
+    }
+
+    // =========================================
+    // 4. 档案渲染与同步 UI
+    // =========================================
+    function updateArchiveCount() {
+      const count = loadRecords().filter(r => !r.deleted).length;
+      document.getElementById("archiveCountBadge").textContent = count;
+      document.getElementById("shortcutCount").textContent = count;
+    }
+
+    function getCategoryDisplayName(catKey) {
+      const found = CATEGORIES.find(c => c.id === catKey);
+      if (found) return found.name;
+      // 兼容旧版中文分类名
+      return catKey && catKey !== "unset" ? catKey : "未选类别";
+    }
+
+    function normalizeCategoryId(catVal) {
+      if (!catVal) return "unset";
+      if (CATEGORIES.some(c => c.id === catVal)) return catVal;
+      const map = { "事业": "career", "财运": "wealth", "感情": "love", "学业": "study", "出行": "travel", "健康": "health" };
+      return map[catVal] || "unset";
+    }
+
+    function renderArchive() {
+      const grid = document.getElementById("archiveGrid");
+      const q = (document.getElementById("archiveSearch").value || "").trim().toLowerCase();
+      const catFilter = document.getElementById("archiveFilterCat").value;
+
+      const records = loadRecords().filter(r => {
+        if (r.deleted) return false;
+        const normCat = normalizeCategoryId(r.category);
+        if (catFilter !== "ALL" && normCat !== catFilter) return false;
+        if (!q) return true;
+        const hay = `${r.question || ""} ${r.note || ""} ${r.hex.baseName} ${r.hex.changedName || ""}`.toLowerCase();
+        return hay.includes(q);
+      });
+
+      if (!records.length) {
+        grid.innerHTML = `
+          <div class="notes-placeholder" style="grid-column:1 / -1; text-align:center; padding:38px 20px;">
+            <h3>馆中暂无匹配的卦象档案</h3>
+            <p>在「今日起卦」完成摇卦后点击「收入卦象档案」，或点击右上角云朵图标同步 GitHub Gist。</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = records.map(r => {
+        const catName = getCategoryDisplayName(normalizeCategoryId(r.category));
+        return `
+          <article class="archive-card">
+            <div>
+              <div class="archive-card-head">
+                <div>
+                  <h4 class="archive-hex">
+                    ${escapeHtml(r.hex.baseName)}${r.hex.changedName ? ` 之 ${escapeHtml(r.hex.changedName)}` : ""}
+                  </h4>
+                  <div class="archive-meta">${formatTime(r.createdAt)} · ${escapeHtml(r.hex.dayGanZhi)}日</div>
+                </div>
+                <span class="chip ochre">${escapeHtml(catName)}</span>
+              </div>
+              ${r.question && r.question !== "未填写所问之事"
+                ? `<p style="margin:10px 0 0; font-size:13px; color:var(--ink);">${escapeHtml(r.question)}</p>`
+                : ""}
+              ${r.note
+                ? `<div class="archive-note" style="margin-top:8px;">复盘：${escapeHtml(r.note)}</div>`
+                : ""}
+            </div>
+            <div class="archive-actions">
+              <button class="btn btn-sm" onclick="openRecordDetail('${r.id}')">查看排盘与复盘</button>
+              <button class="btn btn-reset btn-sm" onclick="deleteRecord('${r.id}')">删除</button>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    window.openRecordDetail = function(id) {
+      const rec = loadRecords().find(r => r.id === id);
+      if (!rec) return;
+      const catId = normalizeCategoryId(rec.category);
+      const analysis = catId !== "unset" ? analyzeByCategory(rec.hex, catId, rec.loveSubRole || "general") : null;
+
+      document.getElementById("detailTitle").textContent =
+        rec.question && rec.question !== "未填写所问之事" ? rec.question : `${rec.hex.baseName} · 档案详情`;
+
+      const body = document.getElementById("detailBody");
+      body.innerHTML = `
+        <div style="background:var(--surface); border:1px solid var(--line); border-radius:4px; padding:16px; margin-bottom:16px;">
+          ${renderPaipanHtml(rec.hex, analysis)}
+        </div>
+        ${analysis ? `<div style="margin-bottom:18px;">${renderVerdictCardHtml(rec.hex, analysis, false, { uid: "modal", castDate: rec.createdAt, savePngBtnId: "downloadDetailPlaquePngBtn", saveSvgBtnId: "downloadDetailPlaqueSvgBtn" })}</div><div class="detail-analysis-grid" style="padding:0; margin-bottom:16px;">${renderDetailedAnalysisHtml(rec.hex, analysis)}</div>` : ""}
+        <div style="margin-bottom:12px;">
+          <label for="detailNoteInput" style="display:block; font-size:12px; color:var(--muted); margin-bottom:6px;">事后应验 / 复盘笔记</label>
+          <textarea id="detailNoteInput" class="field-textarea" placeholder="记下后续进展与应验情况…">${escapeHtml(rec.note || "")}</textarea>
+        </div>
+        <div style="display:flex; justify-content:flex-end; gap:8px;">
+          <button class="btn btn-primary btn-sm" id="saveDetailNoteBtn">保存复盘</button>
+        </div>
+      `;
+
+      const detailDlPngBtn = document.getElementById("downloadDetailPlaquePngBtn");
+      if (detailDlPngBtn && analysis) {
+        detailDlPngBtn.onclick = () => exportPlaquePng(rec.hex, analysis, rec.createdAt);
+      }
+      const detailDlSvgBtn = document.getElementById("downloadDetailPlaqueSvgBtn");
+      if (detailDlSvgBtn && analysis) {
+        detailDlSvgBtn.onclick = () => exportPlaqueSvg(rec.hex, analysis, rec.createdAt);
+      }
+
+      document.getElementById("saveDetailNoteBtn").onclick = async () => {
+        const list = loadRecords();
+        const target = list.find(x => x.id === id);
+        if (target) {
+          target.note = document.getElementById("detailNoteInput").value.trim();
+          target.updatedAt = new Date().toISOString();
+          saveRecords(list);
+          renderArchive();
+          closeModal("detailModal");
+          showToast("复盘笔记已保存");
+          await pushSilentSyncIfConnected();
+        }
+      };
+      openModal("detailModal");
+    };
+
+    window.deleteRecord = async function(id) {
+      if (!confirm("确定从档案中移除这条卦象记录吗？")) return;
+      const list = loadRecords();
+      const target = list.find(x => x.id === id);
+      if (target) {
+        target.deleted = true;
+        target.updatedAt = new Date().toISOString();
+        saveRecords(list);
+        renderArchive();
+        showToast("已删除该档案");
+        await pushSilentSyncIfConnected();
+      }
+    };
+
+    function setSyncDot(status) {
+      const dot = document.getElementById("syncBadgeDot");
+      dot.className = "sync-badge-dot" + (status ? ` ${status}` : "");
+    }
+
+    function refreshSyncUI() {
+      const state = loadSyncState();
+      const dis = document.getElementById("syncDisconnectedView");
+      const con = document.getElementById("syncConnectedView");
+      if (!state || !state.token) {
+        setSyncDot("");
+        dis.classList.remove("hidden");
+        con.classList.add("hidden");
+      } else {
+        setSyncDot("ok");
+        dis.classList.add("hidden");
+        con.classList.remove("hidden");
+        document.getElementById("ghAvatar").src = state.avatarUrl || `https://github.com/${state.login}.png?size=64`;
+        document.getElementById("ghUsername").textContent = `@${state.login}`;
+        document.getElementById("ghSyncMeta").textContent = state.lastSyncAt
+          ? `上次同步：${formatTime(state.lastSyncAt)}`
+          : "已连接私有 Gist";
+        document.getElementById("openGistLink").href = `https://gist.github.com/${state.login}/${state.gistId}`;
+      }
+    }
+
+    function showSyncAlert(type, msg) {
+      const el = document.getElementById("syncAlert");
+      el.innerHTML = msg ? `<div class="alert alert-${type}">${escapeHtml(msg)}</div>` : "";
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add("open"); }
+    function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+
+    function switchTab(tab) {
+      document.querySelectorAll(".nav-link").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+      document.getElementById("tab-cast").classList.toggle("hidden", tab !== "cast");
+      document.getElementById("tab-archive").classList.toggle("hidden", tab !== "archive");
+      if (tab === "archive") renderArchive();
+    }
+
+    // =========================================
+    // 5. 事件绑定与初始化
+    // =========================================
+    document.querySelectorAll(".nav-link").forEach(btn => {
+      btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+    });
+
+    document.getElementById("brandHomeBtn").addEventListener("click", () => switchTab("cast"));
+    document.getElementById("gotoArchiveCard").addEventListener("click", () => switchTab("archive"));
+    document.getElementById("gotoArchiveCard").addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); switchTab("archive"); }
+    });
+
+    document.getElementById("tossOneBtn").addEventListener("click", performSingleToss);
+    document.getElementById("tossAllBtn").addEventListener("click", performAutoSixToss);
+    document.getElementById("resetCastingBtn").addEventListener("click", resetAll);
+    document.getElementById("recastBtn").addEventListener("click", resetAll);
+
+    document.querySelectorAll("#loveSubRoleBar .sub-role-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        loveSubRole = btn.dataset.loverole;
+        document.querySelectorAll("#loveSubRoleBar .sub-role-btn").forEach(b => b.classList.toggle("active", b === btn));
+        if (currentHex && selectedCategoryId === "love") {
+          renderAnalysisPanel();
+          const analysis = analyzeByCategory(currentHex, selectedCategoryId, loveSubRole);
+          document.getElementById("paipanView").innerHTML = renderPaipanHtml(currentHex, analysis);
+        }
+      });
+    });
+
+    document.getElementById("saveArchiveBtn").addEventListener("click", async () => {
+      if (!currentHex) return;
+      const nowIso = new Date().toISOString();
+      const memo = document.getElementById("postMemoInput").value.trim();
+      const list = loadRecords();
+
+      if (savedRecordId) {
+        const existing = list.find(r => r.id === savedRecordId);
+        if (existing) {
+          existing.question = memo || existing.question;
+          existing.category = selectedCategoryId || "unset";
+          existing.loveSubRole = loveSubRole;
+          existing.updatedAt = nowIso;
+          saveRecords(list);
+          showToast("已更新本条档案");
+          await pushSilentSyncIfConnected();
+          return;
+        }
+      }
+
+      const id = crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      const rec = {
+        id,
+        createdAt: (currentCastDate || new Date()).toISOString(),
+        updatedAt: nowIso,
+        question: memo || `${currentHex.baseName}${selectedCategoryId ? ` · ${getCategoryDisplayName(selectedCategoryId)}` : ""}`,
+        category: selectedCategoryId || "unset",
+        loveSubRole,
+        note: "",
+        method: "铜钱摇卦",
+        yaoValues: currentTosses.map(t => t.sum),
+        hex: currentHex,
+        deleted: false
+      };
+      list.unshift(rec);
+      saveRecords(list);
+      savedRecordId = id;
+
+      const btn = document.getElementById("saveArchiveBtn");
+      btn.textContent = "已入馆 · 可更新";
+      showToast("已收入你的卦象档案");
+      await pushSilentSyncIfConnected();
+    });
+
+    document.getElementById("archiveSearch").addEventListener("input", renderArchive);
+    document.getElementById("archiveFilterCat").addEventListener("change", renderArchive);
+
+    document.getElementById("openGuideBtn").addEventListener("click", () => openModal("guideModal"));
+    document.getElementById("footerGuideBtn").addEventListener("click", () => openModal("guideModal"));
+    document.getElementById("openSyncBtn").addEventListener("click", () => {
+      showSyncAlert("", "");
+      refreshSyncUI();
+      openModal("syncModal");
+    });
+    document.getElementById("footerSyncBtn").addEventListener("click", () => {
+      showSyncAlert("", "");
+      refreshSyncUI();
+      openModal("syncModal");
+    });
+
+    document.querySelectorAll("[data-close]").forEach(btn => {
+      btn.addEventListener("click", () => closeModal(btn.dataset.close));
+    });
+    document.querySelectorAll(".modal-backdrop").forEach(bg => {
+      bg.addEventListener("click", e => {
+        if (e.target === bg) bg.classList.remove("open");
+      });
+    });
+
+    document.getElementById("connectGithubBtn").addEventListener("click", async () => {
+      const token = document.getElementById("tokenInput").value;
+      const btn = document.getElementById("connectGithubBtn");
+      btn.disabled = true;
+      showSyncAlert("", "");
+      try {
+        await findOrCreateGistAndSync(token);
+        document.getElementById("tokenInput").value = "";
+        showSyncAlert("ok", "连接成功，已完成私有 Gist 双向同步。");
+      } catch (err) {
+        setSyncDot("err");
+        showSyncAlert("err", err.message || "连接失败");
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById("syncModalNowBtn").addEventListener("click", async () => {
+      const btn = document.getElementById("syncModalNowBtn");
+      btn.disabled = true;
+      try {
+        await findOrCreateGistAndSync();
+        showSyncAlert("ok", "双向同步完成。");
+      } catch (err) {
+        setSyncDot("err");
+        showSyncAlert("err", err.message || "同步失败");
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById("archiveSyncBtn").addEventListener("click", async () => {
+      const state = loadSyncState();
+      if (!state || !state.token) {
+        openModal("syncModal");
+        return;
+      }
+      try {
+        await findOrCreateGistAndSync();
+        showToast("已与 GitHub 私有 Gist 同步");
+      } catch (err) {
+        showToast(err.message || "同步失败");
+      }
+    });
+
+    document.getElementById("disconnectBtn").addEventListener("click", () => {
+      saveSyncState(null);
+      refreshSyncUI();
+      showSyncAlert("info", "已断开连接并清除本机令牌，云端 Gist 文件仍保留。");
+    });
+
+    // 初始化
+    updateEditionHeader();
+    updateArchiveCount();
+    refreshSyncUI();
+    renderYaoStack();
+    renderCategoryButtons();
+    renderAnalysisPanel();
+  </script>
+</body>
+</html>
